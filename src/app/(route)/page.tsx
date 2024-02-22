@@ -4,7 +4,7 @@ import { useEffect } from "react";
 export default function Home() {
   useEffect(() => {
     fetch("/api/hello")
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => console.log("data", data));
   }, []);
 
