@@ -8,6 +8,7 @@
     "_types": "Typescript",
     "_utils": "Utils",
     "_lib": "Lib",
+    "_styles": "Css",
     "(route)": "Routes"
   }
 }
