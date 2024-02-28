@@ -2,7 +2,6 @@
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import { RecoilRoot } from "recoil";
 
 export default function Layout({
   children,
@@ -10,15 +9,13 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <RecoilRoot>
-      <Container>
-        <Sidebar />
-        <HeaderMainContainer>
-          <Header />
-          <article>{children}</article>
-        </HeaderMainContainer>
-      </Container>
-    </RecoilRoot>
+    <Container>
+      <Sidebar />
+      <HeaderMainContainer>
+        <Header />
+        <article>{children}</article>
+      </HeaderMainContainer>
+    </Container>
   );
 }
 

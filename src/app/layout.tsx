@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Layout from "./_components/Layout";
 import { GlobalStyles } from "./_styles/GlobalStyles";
 import localFont from "next/font/local";
+import RecoilRootProvider from "@/_lib/recoilRootProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,10 +28,12 @@ export default function RootLayout({
   return (
     <html className={suite.className}>
       <body>
-        <StyledComponentsRegistry>
-          <GlobalStyles />
-          <Layout>{children}</Layout>
-        </StyledComponentsRegistry>
+        <RecoilRootProvider>
+          <StyledComponentsRegistry>
+            <GlobalStyles />
+            <Layout>{children}</Layout>
+          </StyledComponentsRegistry>
+        </RecoilRootProvider>
       </body>
     </html>
   );
