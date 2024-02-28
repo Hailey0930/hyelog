@@ -18,7 +18,7 @@ export const GlobalStyles = createGlobalStyle`
         --white-color-500: #C0C0C0;
 		--white-color-600: #bdbdbd;
         --white-color-700: #b5b5b5;
-		--white-color-800: #000
+		--white-color-800: #000;
 
 		--primary-color: #304CFD;
 		--secondary-color: #F0F2F5;
@@ -77,5 +77,9 @@ export const GlobalStyles = createGlobalStyle`
 	a {
 		text-decoration: none;
 		color: inherit;
+	}
+	button {
+		all: unset;
+		cursor: pointer;
 	}
 `;
