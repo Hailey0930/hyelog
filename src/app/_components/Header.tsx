@@ -3,9 +3,9 @@ import * as S from "../_styles/Header.styles";
 import { sidebarState } from "../_store/sidebarState";
 import Image from "next/image";
 import { hamburger } from "../../../public/sidebar/sidebarImage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { breakPoints } from "../_styles/breakPoints";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 export default function Header() {
   const menuArray = [
@@ -14,9 +14,17 @@ export default function Header() {
     { name: "About", path: "/about" },
   ];
 
+  const [currentPath, setCurrentPath] = useState("/");
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarState);
 
   const pathname = usePathname();
+  const params = useParams();
+
+  useEffect(() => {
+    if (params?.blogId) {
+      setCurrentPath("/");
+    } else setCurrentPath(pathname);
+  }, [pathname, params]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -50,7 +58,7 @@ export default function Header() {
           <S.Menu
             key={menu.name}
             href={menu.path}
-            className={pathname === menu.path ? "current" : ""}
+            className={currentPath === menu.path ? "current" : ""}
           >
             {menu.name}
           </S.Menu>
