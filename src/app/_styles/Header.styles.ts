@@ -15,13 +15,18 @@ export const MenuContainer = styled.div`
   gap: 30px;
 
   @media screen and (max-width: ${breakPoints.small}px) {
-    gap: 20px;
+    gap: 15px;
   }
 `;
 
 export const Hamburger = styled.button`
   width: 25px;
   height: 25px;
+
+  @media screen and (max-width: ${breakPoints.small}px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 export const Menu = styled(Link)`
@@ -35,7 +40,11 @@ export const Menu = styled(Link)`
     color: var(--white-color-100);
   }
 
+  @media screen and (max-width: ${breakPoints.medium}px) {
+    font-size: var(--font-size-400);
+  }
+
   @media screen and (max-width: ${breakPoints.small}px) {
-    font-size: var(--font-size-300);
+    font-size: var(--font-size-500);
   }
 `;
