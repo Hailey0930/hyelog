@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import { sidebarState } from "../_store/sidebarState";
 import { useEffect } from "react";
 import { setVH } from "../_utils/setVH";
+import { breakPoints } from "../_styles/breakPoints";
 
 export default function Layout({
   children,
@@ -43,6 +44,10 @@ const HeaderMainContainer = styled.div<{ $isSidebarOpen: boolean }>`
   width: ${(props) => (props.$isSidebarOpen ? "calc(100% - 300px)" : "100%")};
   height: 100%;
   overflow: hidden;
+
+  @media screen and (max-width: ${breakPoints.small}px) {
+    width: ${(props) => (props.$isSidebarOpen ? "0" : "100%")};
+  }
 `;
 
 const ContentContainer = styled.article`
