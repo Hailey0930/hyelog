@@ -8,7 +8,7 @@ export const Container = styled.aside<{ $isSidebarOpen: boolean }>`
   flex-direction: column;
   align-items: center;
   width: ${(props) => (props.$isSidebarOpen ? "280px" : "0px")};
-  height: calc((var(--vh, 1vh) * 100) - 20px);
+  height: 100%;
   padding: ${(props) => (props.$isSidebarOpen ? "10px" : "0")};
   background-color: var(--secondary-color);
   transition: all 0.2s;

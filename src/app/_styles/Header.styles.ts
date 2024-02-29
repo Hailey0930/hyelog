@@ -7,6 +7,7 @@ export const Container = styled.header`
   align-items: center;
   height: 35px;
   padding: 10px 20px;
+  position: sticky;
 `;
 
 export const MenuContainer = styled.div`
