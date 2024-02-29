@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
+import { breakPoints } from "./breakPoints";
 
 export const Container = styled.aside<{ $isSidebarOpen: boolean }>`
   display: flex;
@@ -13,6 +14,10 @@ export const Container = styled.aside<{ $isSidebarOpen: boolean }>`
   background-color: var(--secondary-color);
   transition: all 0.2s;
   overflow: hidden;
+
+  @media screen and (max-width: ${breakPoints.small}px) {
+    width: ${(props) => (props.$isSidebarOpen ? "100%" : "0px")};
+  }
 `;
 
 export const HamburgerContainer = styled.div`
