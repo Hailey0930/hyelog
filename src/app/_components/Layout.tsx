@@ -4,6 +4,8 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { useRecoilValue } from "recoil";
 import { sidebarState } from "../_store/sidebarState";
+import { useEffect } from "react";
+import { setVH } from "../_utils/setVH";
 
 export default function Layout({
   children,
@@ -12,12 +14,17 @@ export default function Layout({
 }>) {
   const isSidebarOpen = useRecoilValue(sidebarState);
 
+  useEffect(() => {
+    window.addEventListener("resize", setVH);
+    setVH();
+  }, []);
+
   return (
     <Container>
       <Sidebar />
       <HeaderMainContainer $isSidebarOpen={isSidebarOpen}>
         <Header />
-        <article>{children}</article>
+        <ContentContainer>{children}</ContentContainer>
       </HeaderMainContainer>
     </Container>
   );
@@ -26,6 +33,8 @@ export default function Layout({
 const Container = styled.div`
   display: flex;
   width: 100%;
+  height: calc((var(--vh, 1vh) * 100));
+  overflow: hidden;
 `;
 
 const HeaderMainContainer = styled.div<{ $isSidebarOpen: boolean }>`
@@ -33,4 +42,9 @@ const HeaderMainContainer = styled.div<{ $isSidebarOpen: boolean }>`
   flex-direction: column;
   width: ${(props) => (props.$isSidebarOpen ? "calc(100% - 300px)" : "100%")};
   height: 100%;
+  overflow: hidden;
+`;
+
+const ContentContainer = styled.article`
+  overflow: auto;
 `;

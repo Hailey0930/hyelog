@@ -1,7 +1,5 @@
 "use client";
-import { useEffect } from "react";
 import * as S from "../_styles/Sidebar.styles";
-import { setVH } from "../_utils/setVH";
 import { useRecoilState } from "recoil";
 import { sidebarState } from "../_store/sidebarState";
 import Image from "next/image";
@@ -29,11 +27,6 @@ export default function Sidebar() {
   ];
 
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarState);
-
-  useEffect(() => {
-    window.addEventListener("resize", setVH);
-    setVH();
-  }, []);
 
   const handleSidebarOpen = () => {
     setIsSidebarOpen(!isSidebarOpen);
