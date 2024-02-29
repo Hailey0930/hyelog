@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 
-export default function Home() {
+export default function Blog() {
   useEffect(() => {
     fetch("/api/hello")
       .then((res) => res.json())
