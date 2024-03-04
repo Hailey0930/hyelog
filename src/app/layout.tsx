@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description: "Hyelog by Hailey",
     url: "https://hyelog-six.vercel.app",
     siteName: "Hyelog",
-    images: [{ url: "/public/sidebar/profile.jpg", width: 800, height: 600 }],
+    images: [{ url: "/sidebar/profile.jpg", width: 800, height: 600 }],
   },
 };
 
