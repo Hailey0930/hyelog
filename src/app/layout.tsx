@@ -11,7 +11,11 @@ export const metadata: Metadata = {
   title: "Hyelog",
   description: "Hyelog by Hailey",
   openGraph: {
-    images: [{ url: "/public/sidebar/profile.jpg" }],
+    title: "Hyelog",
+    description: "Hyelog by Hailey",
+    url: "https://hyelog-six.vercel.app",
+    siteName: "Hyelog",
+    images: [{ url: "/public/sidebar/profile.jpg", width: 800, height: 600 }],
   },
 };
 
@@ -39,14 +43,6 @@ export default function RootLayout({
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charSet="utf-8" />
-        <meta property="og:site_name" content="Hyelog" />
-        <meta property="og:locale" content="ko_KR" />
-        <meta property="og:title" content="Hyelog" />
-        <meta property="og:description" content="Hyelog by Hailey" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://hyelog-six.vercel.app/" />
-        <meta property="og:image:alt" content="Hyelog profile image" />
-        <meta property="og:image:type" content="image/jpg" />
       </Head>
       <body>
         <RecoilRootProvider>
