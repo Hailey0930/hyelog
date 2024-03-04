@@ -7,8 +7,12 @@ import RecoilRootProvider from "@/_lib/recoilRootProvider";
 import Head from "next/head";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hyelog-six.vercel.app"),
   title: "Hyelog",
   description: "Hyelog by Hailey",
+  openGraph: {
+    images: [{ url: "/public/sidebar/profile.jpg" }],
+  },
 };
 
 const suite = localFont({
@@ -41,7 +45,6 @@ export default function RootLayout({
         <meta property="og:description" content="Hyelog by Hailey" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://hyelog-six.vercel.app/" />
-        <meta property="og:image" content="../../public/sidebar/profile.jpg" />
         <meta property="og:image:alt" content="Hyelog profile image" />
         <meta property="og:image:type" content="image/jpg" />
       </Head>
