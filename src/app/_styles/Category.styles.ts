@@ -65,4 +65,12 @@ export const BlogTitle = styled.div`
 export const BlogDate = styled.div`
   font-size: var(--font-size-600);
   color: var(--white-color-700);
+
+  @media screen and (max-width: ${breakPoints.medium}px) {
+    font-size: var(--font-size-700);
+  }
+
+  @media screen and (max-width: ${breakPoints.small}px) {
+    font-size: 1.4rem;
+  }
 `;
