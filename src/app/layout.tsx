@@ -5,6 +5,7 @@ import { GlobalStyles } from "./_styles/GlobalStyles";
 import localFont from "next/font/local";
 import RecoilRootProvider from "@/_lib/recoilRootProvider";
 import Head from "next/head";
+import ogImage from "../../public/sidebar/profile.jpg";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hyelog-six.vercel.app"),
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     description: "Hyelog by Hailey",
     url: "https://hyelog-six.vercel.app",
     siteName: "Hyelog",
-    images: [{ url: "/sidebar/profile.jpg", width: 800, height: 600 }],
+    images: [{ url: ogImage.src, width: 800, height: 600 }],
   },
 };
 
