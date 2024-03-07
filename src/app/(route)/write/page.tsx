@@ -1,39 +1,90 @@
 "use client";
 import * as S from "../../_styles/Write.styles";
-import { useEffect, useState } from "react";
-import { breakPoints } from "@/app/_styles/breakPoints";
-import dynamic from "next/dynamic";
-import { IPreview, IWriteProps } from "@/app/types/WriteEditor.types";
+import { ChangeEvent, useEffect, useState } from "react";
+import { IWriteCategoryList, IWriteProps } from "@/app/types/WriteEditor.types";
+import { sleep } from "@/app/_utils/sleep";
+import WriteEditor from "../../_components/WriteEditor";
 
 export default function Write({ title, contents, thumbnail }: IWriteProps) {
-  const [preview, setPreview] = useState<IPreview>("vertical");
-
-  const WriteEditor = dynamic(() => import("../../_components/WriteEditor"), {
-    ssr: false,
-  });
+  const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
+  // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [newCategory, setNewCategory] = useState("");
 
   useEffect(() => {
-    const handleResize = () => {
-      setPreview(window.innerWidth > breakPoints.medium ? "vertical" : "tab");
+    const fetchAndSetCategoryList = async () => {
+      const data = await fetchCategoryListAPI();
+
+      const categoryListWithNew = data.map((el) => ({
+        id: el.id,
+        category: el.category,
+        value: el.category,
+      }));
+
+      categoryListWithNew.push({
+        id: "custom",
+        category: "신규 등록",
+        value: "custom",
+      });
+
+      setCategoryList(categoryListWithNew);
+      setSelectedCategory(categoryList[0]?.value);
     };
 
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    fetchAndSetCategoryList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const fetchCategoryListAPI = async () => {
+    await sleep();
+
+    return [
+      {
+        id: "1",
+        category: "category1",
+        blog: [
+          { id: 1, title: "blog1", date: new Date() },
+          { id: 2, title: "blog2", date: new Date() },
+        ],
+      },
+    ];
+  };
+
+  const handleCategory = (
+    e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    if (e.target instanceof HTMLSelectElement)
+      setSelectedCategory(e.target.value);
+    else if (e.target instanceof HTMLInputElement)
+      setNewCategory(e.target.value);
+  };
 
   return (
     <S.Container>
       <S.Title placeholder="제목을 입력하세요" />
+      <S.ThumbnailCategoryContainer>
+        <S.ThumbnailContainer>
+          <S.ThumbnailTitle>썸네일</S.ThumbnailTitle>
+          <S.ThumbnailInput type="file" />
+        </S.ThumbnailContainer>
+        <S.ThumbnailContainer>
+          <S.ThumbnailTitle>카테고리</S.ThumbnailTitle>
+          <S.CategorySelectBox onChange={handleCategory}>
+            {categoryList.map((category) => (
+              <option key={category.id} value={category.value}>
+                {category.category}
+              </option>
+            ))}
+          </S.CategorySelectBox>
+          {selectedCategory === "custom" && (
+            <S.CategoryInput value={newCategory} onChange={handleCategory} />
+          )}
+        </S.ThumbnailContainer>
+      </S.ThumbnailCategoryContainer>
       <S.EditorContainer>
-        <WriteEditor preview={preview} />
+        <WriteEditor />
       </S.EditorContainer>
-      <S.ThumbnailContainer>
-        <S.ThumbnailTitle>썸네일 등록</S.ThumbnailTitle>
-        <S.ThumbnailInput type="file" />
-      </S.ThumbnailContainer>
+
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
         <S.TextButton>작성하기</S.TextButton>

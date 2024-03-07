@@ -29,28 +29,57 @@ export const Title = styled.input`
   }
 `;
 
-export const EditorContainer = styled.div`
-  width: 100%;
-  height: calc(100% - 230px);
-  margin-bottom: 20px;
+export const ThumbnailCategoryContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: calc(100% - 40px);
+  height: 80px;
+  padding: 0px 20px;
+  gap: 15px;
+
+  @media screen and (max-width: ${breakPoints.medium}px) {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    height: 100px;
+  }
 `;
 
 export const ThumbnailContainer = styled.div`
   display: flex;
   align-items: center;
-  width: calc(100% - 40px);
-  height: 50px;
-  padding: 0px 20px;
-  gap: 20px;
+  gap: 10px;
 `;
 
 export const ThumbnailTitle = styled.div`
-  font-size: var(--font-size-500);
+  font-size: var(--font-size-600);
   font-weight: 600;
 `;
 
 export const ThumbnailInput = styled.input`
-  font-size: var(--font-size-600);
+  font-size: var(--font-size-700);
+`;
+
+export const CategorySelectBox = styled.select`
+  width: 150px;
+  height: 35px;
+  font-size: var(--font-size-700);
+`;
+
+export const CategoryInput = styled.input`
+  width: 150px;
+  height: 30px;
+  font-size: var(--font-size-700);
+`;
+
+export const EditorContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 230px);
+
+  @media screen and (max-width: ${breakPoints.medium}px) {
+    height: calc(100% - 250px);
+  }
 `;
 
 export const BottomContainer = styled.div`

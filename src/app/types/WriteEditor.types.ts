@@ -10,3 +10,9 @@ export interface IWriteProps {
   contents?: string;
   thumbnail?: string;
 }
+
+export interface IWriteCategoryList {
+  id: string;
+  category: string;
+  value: string;
+}
