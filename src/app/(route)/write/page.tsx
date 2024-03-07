@@ -1,19 +1,16 @@
 "use client";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "prismjs/themes/prism.css";
-import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
-import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import Prism from "prismjs";
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import * as S from "../../_styles/Write.styles";
-import { Editor } from "@toast-ui/react-editor";
 import { useEffect, useState } from "react";
 import { breakPoints } from "@/app/_styles/breakPoints";
+import dynamic from "next/dynamic";
+import { IPreview } from "@/app/types/WriteEditor.types";
 
 export default function Write() {
-  const [preview, setPreview] = useState(
-    window.innerWidth > breakPoints.medium ? "vertical" : "tab"
-  );
+  const [preview, setPreview] = useState<IPreview>("vertical");
+
+  const WriteEditor = dynamic(() => import("../../_components/WriteEditor"), {
+    ssr: false,
+  });
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,17 +28,7 @@ export default function Write() {
     <S.Container>
       <S.Title placeholder="제목을 입력하세요" />
       <S.EditorContainer>
-        <Editor
-          initialValue=""
-          previewStyle={preview}
-          height="100%"
-          initialEditType="markdown"
-          useCommandShortcut={true}
-          plugins={[
-            [colorSyntax],
-            [codeSyntaxHighlight, { highlighter: Prism }],
-          ]}
-        />
+        <WriteEditor preview={preview} />
       </S.EditorContainer>
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
