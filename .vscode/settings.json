@@ -10,6 +10,7 @@
     "_lib": "Lib",
     "_styles": "Css",
     "_font": "Font",
+    "_client": "Client",
     "(route)": "Routes"
   }
 }

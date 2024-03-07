@@ -1,38 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "../../_styles/Category.styles";
-import { IOpenCategories } from "@/app/types/openCategories.types";
 import upArrow from "../../../../public/icon_up-arrow.png";
 import downArrow from "../../../../public/icon_down-arrow.png";
 import { useRouter } from "next/navigation";
+import { ICategoryList, IOpenCategories } from "@/app/types/Category.types";
+import { sleep } from "@/app/_utils/sleep";
+import dayjs from "dayjs";
 
 export default function Category() {
-  const categoryList = [
-    {
-      id: 1,
-      category: "category1",
-      blog: [
-        { id: 1, title: "blog1", date: "2024-03-04" },
-        { id: 2, title: "blog2", date: "2024-03-04" },
-      ],
-    },
-    {
-      id: 2,
-      category: "category2",
-      blog: [{ id: 3, title: "blog1", date: "2024-03-04" }],
-    },
-    {
-      id: 3,
-      category: "category3",
-      blog: [{ id: 4, title: "blog1", date: "2024-03-04" }],
-    },
-  ];
-
+  const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
   const [openCategories, setOpenCategories] = useState<IOpenCategories>({});
 
   const router = useRouter();
 
-  const handleOpenCategories = (id: number) => {
+  useEffect(() => {
+    fetchCategoryListAPI().then((data) => setCategoryList(data));
+  }, []);
+
+  const fetchCategoryListAPI = async () => {
+    await sleep();
+
+    return [
+      {
+        id: "1",
+        category: "category1",
+        blog: [
+          { id: 1, title: "blog1", date: new Date() },
+          { id: 2, title: "blog2", date: new Date() },
+        ],
+      },
+    ];
+  };
+
+  const handleOpenCategories = (id: string) => {
     setOpenCategories((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -66,7 +67,9 @@ export default function Category() {
                   onClick={() => handleMoveToBlog(blog.id)}
                 >
                   <S.BlogTitle>{blog.title}</S.BlogTitle>
-                  <S.BlogDate>{blog.date}</S.BlogDate>
+                  <S.BlogDate>
+                    {dayjs(blog.date).format("YYYY.MM.DD")}
+                  </S.BlogDate>
                 </S.BlogInfoContainer>
               ))}
             </S.BlogContainer>

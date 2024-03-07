@@ -2,38 +2,15 @@
 import Image from "next/image";
 import * as S from "../_styles/Blog.styles";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { IBlogList } from "../types/Blog.types";
+import { sleep } from "../_utils/sleep";
+import dayjs from "dayjs";
 
 export default function Blog() {
-  const blogList = [
-    {
-      id: 1,
-      title: "제목",
-      contents: "내용",
-      date: "2024.02.29",
-      thumbnail: "",
-    },
-    {
-      id: 2,
-      title: "제목",
-      contents: "내용",
-      date: "2024.02.29",
-      thumbnail: "",
-    },
-    {
-      id: 3,
-      title: "제목",
-      contents: "내용",
-      date: "2024.02.29",
-      thumbnail: "",
-    },
-    {
-      id: 4,
-      title: "제목",
-      contents: "내용",
-      date: "2024.02.29",
-      thumbnail: "",
-    },
-  ];
+  const [blogList, setBlogList] = useState<IBlogList[]>([]);
+
+  const router = useRouter();
 
   // useEffect(() => {
   //   fetch("/api/hello")
@@ -41,9 +18,25 @@ export default function Blog() {
   //     .then((data) => console.log("data", data));
   // }, []);
 
-  const router = useRouter();
+  useEffect(() => {
+    fetchBlogListAPI().then((data) => setBlogList(data));
+  }, []);
 
-  const handleMoveToDetail = (id: number) => {
+  const fetchBlogListAPI = async () => {
+    await sleep();
+
+    return [
+      {
+        id: "1",
+        title: "제목",
+        contents: "내용",
+        date: new Date(),
+        thumbnail: "",
+      },
+    ];
+  };
+
+  const handleMoveToDetail = (id: string) => {
     router.push(`/${id}`);
   };
 
@@ -59,7 +52,7 @@ export default function Blog() {
           </S.ThumbnailContainer>
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
-            <S.Date>{blog.date}</S.Date>
+            <S.Date>{dayjs(blog.date).format("YYYY.MM.DD")}</S.Date>
             <S.Contents>{blog.contents}</S.Contents>
           </S.ContentContainer>
         </S.BlogContainer>
