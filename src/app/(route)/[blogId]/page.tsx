@@ -4,20 +4,35 @@ import * as S from "../../_styles/BlogDetail.styles";
 import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { IBlogDetail } from "@/app/types/BlogDetail.types";
+import { sleep } from "@/app/_utils/sleep";
+import dayjs from "dayjs";
 
 export default function BlogDetail() {
-  const blogDetail = {
-    id: "1",
-    title: "제목",
-    date: "2024.03.05",
-    thumbnail: "",
-    contents: "",
-  };
   const indexArr = ["#1", "##2", "###3", "####4", "#5"];
+
+  const [blogDetail, setBlogDetail] = useState<IBlogDetail>();
 
   const isSidebarOpen = useRecoilValue(sidebarState);
 
   const router = useRouter();
+
+  useEffect(() => {
+    fetchBlogDetailAPI().then((data) => setBlogDetail(data));
+  }, []);
+
+  const fetchBlogDetailAPI = async () => {
+    await sleep();
+
+    return {
+      id: "1",
+      title: "",
+      date: new Date(),
+      thumbnail: "",
+      contents: "",
+    };
+  };
 
   const handleMoveToList = () => {
     router.push("/");
@@ -27,9 +42,9 @@ export default function BlogDetail() {
     <S.Container>
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
         <S.BlogInfoContainer>
-          <S.BlogTitle>{blogDetail.title}</S.BlogTitle>
+          <S.BlogTitle>{blogDetail?.title}</S.BlogTitle>
           <S.DateEditContainer>
-            <S.Date>{blogDetail.date}</S.Date>
+            <S.Date>{dayjs(blogDetail?.date).format("YYYY.MM.DD")}</S.Date>
             <S.EditDeleteContainer>
               <S.TextButton onClick={handleMoveToList}>목록으로</S.TextButton>
               <S.TextButton>수정</S.TextButton>
@@ -41,7 +56,7 @@ export default function BlogDetail() {
       <S.ContentsContainer>
         <S.ThumbnailContentsContainer $isSidebarOpen={isSidebarOpen}>
           <S.Thumbnail>
-            <Image src={blogDetail.thumbnail} alt="썸네일" />
+            <Image src={blogDetail ? blogDetail.thumbnail : ""} alt="썸네일" />
           </S.Thumbnail>
           <S.Contents></S.Contents>
         </S.ThumbnailContentsContainer>
