@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as S from "../../_styles/BlogDetail.styles";
 import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlogDetail } from "@/app/types/BlogDetail.types";
 import { sleep } from "@/app/_utils/sleep";
@@ -17,6 +17,7 @@ export default function BlogDetail() {
   const isSidebarOpen = useRecoilValue(sidebarState);
 
   const router = useRouter();
+  const params = useParams();
 
   useEffect(() => {
     fetchBlogDetailAPI().then((data) => setBlogDetail(data));
@@ -38,6 +39,10 @@ export default function BlogDetail() {
     router.push("/");
   };
 
+  const handleMoveToEdit = () => {
+    router.push(`${params.blogId}/edit`);
+  };
+
   return (
     <S.Container>
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
@@ -47,7 +52,7 @@ export default function BlogDetail() {
             <S.Date>{dayjs(blogDetail?.date).format("YYYY.MM.DD")}</S.Date>
             <S.EditDeleteContainer>
               <S.TextButton onClick={handleMoveToList}>목록으로</S.TextButton>
-              <S.TextButton>수정</S.TextButton>
+              <S.TextButton onClick={handleMoveToEdit}>수정</S.TextButton>
               <S.TextButton>삭제</S.TextButton>
             </S.EditDeleteContainer>
           </S.DateEditContainer>

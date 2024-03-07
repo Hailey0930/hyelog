@@ -3,9 +3,9 @@ import * as S from "../../_styles/Write.styles";
 import { useEffect, useState } from "react";
 import { breakPoints } from "@/app/_styles/breakPoints";
 import dynamic from "next/dynamic";
-import { IPreview } from "@/app/types/WriteEditor.types";
+import { IPreview, IWriteProps } from "@/app/types/WriteEditor.types";
 
-export default function Write() {
+export default function Write({ title, contents, thumbnail }: IWriteProps) {
   const [preview, setPreview] = useState<IPreview>("vertical");
 
   const WriteEditor = dynamic(() => import("../../_components/WriteEditor"), {
