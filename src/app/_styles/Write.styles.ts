@@ -31,7 +31,26 @@ export const Title = styled.input`
 
 export const EditorContainer = styled.div`
   width: 100%;
-  height: calc(100% - 150px);
+  height: calc(100% - 230px);
+  margin-bottom: 20px;
+`;
+
+export const ThumbnailContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: calc(100% - 40px);
+  height: 50px;
+  padding: 0px 20px;
+  gap: 20px;
+`;
+
+export const ThumbnailTitle = styled.div`
+  font-size: var(--font-size-500);
+  font-weight: 600;
+`;
+
+export const ThumbnailInput = styled.input`
+  font-size: var(--font-size-600);
 `;
 
 export const BottomContainer = styled.div`
@@ -40,7 +59,7 @@ export const BottomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: calc(100% - 50px);
+  width: calc(100% - 40px);
   height: 50px;
   padding: 10px 20px;
   background-color: var(--secondary-color);

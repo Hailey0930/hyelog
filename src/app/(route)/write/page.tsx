@@ -30,6 +30,10 @@ export default function Write({ title, contents, thumbnail }: IWriteProps) {
       <S.EditorContainer>
         <WriteEditor preview={preview} />
       </S.EditorContainer>
+      <S.ThumbnailContainer>
+        <S.ThumbnailTitle>썸네일 등록</S.ThumbnailTitle>
+        <S.ThumbnailInput type="file" />
+      </S.ThumbnailContainer>
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
         <S.TextButton>작성하기</S.TextButton>
