@@ -11,6 +11,7 @@
     "_styles": "Css",
     "_font": "Font",
     "_client": "Client",
+    "_test": "Test",
     "(route)": "Routes"
   }
 }
