@@ -3,9 +3,9 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "prismjs/themes/prism.css";
 import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
 import Prism from "prismjs";
-import { IPreview, IWriteEditorProps } from "../types/WriteEditor.types";
+import { IPreview } from "../types/WriteEditor.types";
 import dynamic from "next/dynamic";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { breakPoints } from "../_styles/breakPoints";
 
 const WriteEditor = () => {
