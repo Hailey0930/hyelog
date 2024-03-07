@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { IBlogDetail } from "@/app/types/BlogDetail.types";
 import { sleep } from "@/app/_utils/sleep";
 import dayjs from "dayjs";
+import DetailViewer from "@/app/_components/DetailViewer";
 
 export default function BlogDetail() {
   const indexArr = ["#1", "##2", "###3", "####4", "#5"];
@@ -63,7 +64,9 @@ export default function BlogDetail() {
           <S.Thumbnail>
             <Image src={blogDetail ? blogDetail.thumbnail : ""} alt="썸네일" />
           </S.Thumbnail>
-          <S.Contents></S.Contents>
+          <S.Contents>
+            <DetailViewer contents="" />
+          </S.Contents>
         </S.ThumbnailContentsContainer>
         <S.IndexContainer $isSidebarOpen={isSidebarOpen}>
           <S.IndexWrapper>
