@@ -94,9 +94,11 @@ export const Thumbnail = styled.div`
 `;
 
 export const Contents = styled.div`
-  width: 100%;
-  height: 500px;
-  border: 1px solid red;
+  width: calc(100% - 20px);
+  min-height: 300px;
+  padding: 10px;
+  border: 1px solid var(--white-color-500);
+  border-radius: 5px;
 `;
 
 export const IndexContainer = styled.div<{ $isSidebarOpen: boolean }>`
