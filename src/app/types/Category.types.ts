@@ -1,11 +1,9 @@
+import { IBlogList } from "./Blog.types";
+
 export interface ICategoryList {
   id: string;
   category: string;
-  blog: {
-    id: number;
-    title: string;
-    date: Date;
-  }[];
+  blogs: IBlogList[];
 }
 
 export interface IOpenCategories {

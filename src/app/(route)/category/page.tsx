@@ -5,8 +5,8 @@ import upArrow from "../../../../public/icon_up-arrow.png";
 import downArrow from "../../../../public/icon_down-arrow.png";
 import { useRouter } from "next/navigation";
 import { ICategoryList, IOpenCategories } from "@/app/types/Category.types";
-import { sleep } from "@/app/_utils/sleep";
 import dayjs from "dayjs";
+import { categoryListAPI } from "@/app/_client/api";
 
 export default function Category() {
   const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
@@ -15,23 +15,8 @@ export default function Category() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchCategoryListAPI().then((data) => setCategoryList(data));
+    categoryListAPI().then((data) => setCategoryList(data));
   }, []);
-
-  const fetchCategoryListAPI = async () => {
-    await sleep();
-
-    return [
-      {
-        id: "1",
-        category: "category1",
-        blog: [
-          { id: 1, title: "blog1", date: new Date() },
-          { id: 2, title: "blog2", date: new Date() },
-        ],
-      },
-    ];
-  };
 
   const handleOpenCategories = (id: string) => {
     setOpenCategories((prev) => ({
@@ -40,7 +25,7 @@ export default function Category() {
     }));
   };
 
-  const handleMoveToBlog = (id: number) => {
+  const handleMoveToBlog = (id: string) => {
     router.push(`${id}`);
   };
 
@@ -61,7 +46,7 @@ export default function Category() {
 
           {openCategories[category.id] && (
             <S.BlogContainer>
-              {category.blog.map((blog) => (
+              {category.blogs.map((blog) => (
                 <S.BlogInfoContainer
                   key={blog.id}
                   onClick={() => handleMoveToBlog(blog.id)}

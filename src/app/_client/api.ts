@@ -1,13 +1,15 @@
 import axios from "axios";
 import { IBlogList } from "../types/Blog.types";
+import { ICategoryList } from "../types/Category.types";
 
 export const blogListAPI = async (): Promise<IBlogList[]> => {
   const response = await fetch("/api/blogList");
   return response.json();
 };
 
-export const categoryListAPI = () => {
-  return fetch("/api/category");
+export const categoryListAPI = async (): Promise<ICategoryList[]> => {
+  const response = await fetch("/api/category");
+  return response.json();
 };
 
 export const blogDetailAPI = (id: string) => {

@@ -17,20 +17,20 @@ model Blog {
   thumbnail   Bytes?
   date        DateTime   @default(now()) @map(name: "date")
   category    String
-  categoryId  String?     
-  Category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String     
+  Category    Category   @relation(fields: [categoryId], references: [id])
   images      Image[]
 }
 
 model Category {
   id            String   @default(cuid()) @id
   category      String
-  blogs         Blog[]
+  blogs         Blog[]  
 }
 
 model Image {
-  id          String @default(cuid())  @id
+  id          String     @default(cuid())  @id
   data        Bytes
   blogId      String
-  Blog        Blog @relation(fields: [blogId], references: [id])
+  Blog        Blog       @relation(fields: [blogId], references: [id])
 }
