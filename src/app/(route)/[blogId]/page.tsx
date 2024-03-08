@@ -3,38 +3,26 @@ import Image from "next/image";
 import * as S from "../../_styles/BlogDetail.styles";
 import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlogDetail } from "@/app/types/BlogDetail.types";
-import { sleep } from "@/app/_utils/sleep";
+import { IBlog } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
 import DetailViewer from "@/app/_components/DetailViewer";
+import { blogDetailAPI } from "@/app/_client/api";
+import { IParams } from "@/app/types/params.types";
 
-export default function BlogDetail() {
+export default function BlogDetail({ params }: IParams) {
   const indexArr = ["#1", "##2", "###3", "####4", "#5"];
 
-  const [blogDetail, setBlogDetail] = useState<IBlogDetail>();
+  const [blogDetail, setBlogDetail] = useState<IBlog>();
 
   const isSidebarOpen = useRecoilValue(sidebarState);
 
   const router = useRouter();
-  const params = useParams();
 
   useEffect(() => {
-    fetchBlogDetailAPI().then((data) => setBlogDetail(data));
-  }, []);
-
-  const fetchBlogDetailAPI = async () => {
-    await sleep();
-
-    return {
-      id: "1",
-      title: "",
-      date: new Date(),
-      thumbnail: "",
-      contents: "",
-    };
-  };
+    blogDetailAPI(params.blogId).then((data) => setBlogDetail(data));
+  }, [params]);
 
   const handleMoveToList = () => {
     router.push("/");

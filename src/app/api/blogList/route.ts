@@ -1,8 +1,8 @@
 import prisma from "../../../_lib/prisma";
-import { IBlogList } from "@/app/types/Blog.types";
+import { IBlog } from "@/app/types/Blog.types";
 import { NextResponse } from "next/server";
 
-export async function GET(): Promise<NextResponse<IBlogList[]> | undefined> {
+export async function GET(): Promise<NextResponse<IBlog[]> | undefined> {
   try {
     const blogs = await prisma.blog.findMany();
     return NextResponse.json(blogs);

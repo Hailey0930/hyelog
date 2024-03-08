@@ -3,12 +3,12 @@ import Image from "next/image";
 import * as S from "../_styles/Blog.styles";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlogList } from "../types/Blog.types";
+import { IBlog } from "../types/Blog.types";
 import dayjs from "dayjs";
 import { blogListAPI } from "../_client/api";
 
 export default function Blog() {
-  const [blogList, setBlogList] = useState<IBlogList[]>([]);
+  const [blogList, setBlogList] = useState<IBlog[]>([]);
 
   const router = useRouter();
 
