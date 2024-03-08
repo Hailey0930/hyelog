@@ -1,5 +1,9 @@
-export const blogListAPI = () => {
-  return fetch("/api/blogList");
+import axios from "axios";
+import { IBlogList } from "../types/Blog.types";
+
+export const blogListAPI = async (): Promise<IBlogList[]> => {
+  const response = await fetch("/api/blogList");
+  return response.json();
 };
 
 export const categoryListAPI = () => {

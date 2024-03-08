@@ -3,5 +3,7 @@ export interface IBlogList {
   title: string;
   contents: string;
   date: Date;
-  thumbnail: string;
+  thumbnail: any;
+  category: string;
+  categoryId: string | null;
 }

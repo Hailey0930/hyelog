@@ -4,37 +4,17 @@ import * as S from "../_styles/Blog.styles";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlogList } from "../types/Blog.types";
-import { sleep } from "../_utils/sleep";
 import dayjs from "dayjs";
+import { blogListAPI } from "../_client/api";
 
 export default function Blog() {
   const [blogList, setBlogList] = useState<IBlogList[]>([]);
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   fetch("/api/hello")
-  //     .then((res) => res.json())
-  //     .then((data) => console.log("data", data));
-  // }, []);
-
   useEffect(() => {
-    fetchBlogListAPI().then((data) => setBlogList(data));
+    blogListAPI().then((data) => setBlogList(data));
   }, []);
-
-  const fetchBlogListAPI = async () => {
-    await sleep();
-
-    return [
-      {
-        id: "1",
-        title: "제목",
-        contents: "내용",
-        date: new Date(),
-        thumbnail: "",
-      },
-    ];
-  };
 
   const handleMoveToDetail = (id: string) => {
     router.push(`/${id}`);
@@ -48,7 +28,7 @@ export default function Blog() {
           onClick={() => handleMoveToDetail(blog.id)}
         >
           <S.ThumbnailContainer>
-            <Image src={blog.thumbnail} alt="블로그 썸네일" />
+            <Image src={blog.thumbnail || ""} alt="블로그 썸네일" />
           </S.ThumbnailContainer>
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
