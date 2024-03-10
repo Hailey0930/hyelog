@@ -25,7 +25,7 @@ export default function DetailViewer({ contents }: IEditorViewer) {
 
   return (
     <Viewer
-      initialValue={"<h1>제목</h1>\n<p>내용</p>"}
+      initialValue={contents}
       plugins={[
         [dynamicCodeSyntax],
         [dynamicCodeSyntaxHighlight, { highlighter: Prism }],

@@ -1,7 +1,13 @@
-export interface IBlogList {
+export interface IBlog {
   id: string;
   title: string;
   contents: string;
   date: Date;
-  thumbnail: string;
+  thumbnail: any;
+  category: string;
+  categoryId: string;
 }
+
+export type IBlogParams = {
+  params: { blogId: string };
+};
