@@ -37,7 +37,7 @@ export default function Category() {
             onClick={() => handleOpenCategories(category.id)}
             $isOpen={openCategories[category.id]}
           >
-            <p>{category.category}</p>
+            <p>{category.name}</p>
             <S.ArrowIcon
               src={openCategories[category.id] ? upArrow : downArrow}
               alt="dropdown"

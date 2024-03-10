@@ -2,7 +2,7 @@ import { IBlog } from "./Blog.types";
 
 export interface ICategoryList {
   id: string;
-  category: string;
+  name: string;
   blogs: IBlog[];
 }
 

@@ -18,3 +18,19 @@ export async function GET(
     console.log(error);
   }
 }
+
+export async function DELETE(request: NextRequest, { params }: IBlogParams) {
+  try {
+    const blogId = params.blogId || "";
+
+    await prisma.blog.delete({
+      where: { id: blogId },
+    });
+
+    return NextResponse.json({ message: "삭제 성공", status: 200 });
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json({ message: "삭제 실패" });
+  }
+}

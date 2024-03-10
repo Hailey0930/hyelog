@@ -16,7 +16,6 @@ model Blog {
   contents    String
   thumbnail   Bytes?
   date        DateTime   @default(now()) @map(name: "date")
-  category    String
   categoryId  String     
   Category    Category   @relation(fields: [categoryId], references: [id])
   images      Image[]
@@ -24,7 +23,7 @@ model Blog {
 
 model Category {
   id            String   @default(cuid()) @id
-  category      String
+  name          String
   blogs         Blog[]  
 }
 

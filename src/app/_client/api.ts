@@ -19,7 +19,7 @@ export const blogDetailAPI = async (id: string) => {
 export const blogWriteAPI = (
   title: string,
   contents: string,
-  thumbnail: string
+  thumbnail?: string
 ) => {
   return fetch("/api/write", {
     method: "POST",
