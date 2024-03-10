@@ -4,7 +4,6 @@ export interface IBlog {
   contents: string;
   date: Date;
   thumbnail: any;
-  category: string;
   categoryId: string;
 }
 
