@@ -7,3 +7,7 @@ export interface IBlog {
   category: string;
   categoryId: string;
 }
+
+export type IBlogParams = {
+  params: { blogId: string };
+};

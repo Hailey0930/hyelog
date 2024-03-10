@@ -1,4 +1,3 @@
-import axios from "axios";
 import { IBlog } from "../types/Blog.types";
 import { ICategoryList } from "../types/Category.types";
 
