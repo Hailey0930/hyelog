@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { IBlog } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
 import DetailViewer from "@/app/_components/DetailViewer";
-import { blogDetailAPI } from "@/app/_client/api";
+import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
 
 export default function BlogDetail({ params }: IParams) {
@@ -32,6 +32,14 @@ export default function BlogDetail({ params }: IParams) {
     router.push(`${params.blogId}/edit`);
   };
 
+  const handleDeleteBlog = () => {
+    const deleteBlog = blogDeleteAPI(params.blogId);
+
+    deleteBlog.then((data) =>
+      data.status === 200 ? router.push("/") : alert("삭제 실패")
+    );
+  };
+
   return (
     <S.Container>
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
@@ -42,7 +50,7 @@ export default function BlogDetail({ params }: IParams) {
             <S.EditDeleteContainer>
               <S.TextButton onClick={handleMoveToList}>목록으로</S.TextButton>
               <S.TextButton onClick={handleMoveToEdit}>수정</S.TextButton>
-              <S.TextButton>삭제</S.TextButton>
+              <S.TextButton onClick={handleDeleteBlog}>삭제</S.TextButton>
             </S.EditDeleteContainer>
           </S.DateEditContainer>
         </S.BlogInfoContainer>
