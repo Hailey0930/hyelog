@@ -1,58 +1,75 @@
 "use client";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import * as S from "../_styles/Write.styles";
-import { sleep } from "../_utils/sleep";
-import { IWriteCategoryList, IWriteProps } from "../types/WriteEditor.types";
-import WriteEditor from "./WriteEditor";
+import {
+  IPreview,
+  IWriteCategoryList,
+  IWriteProps,
+} from "../types/WriteEditor.types";
+import {
+  blogWriteAPI,
+  categoryListAPI,
+  categoryWriteAPI,
+} from "../_client/api";
+import { Editor } from "@toast-ui/react-editor";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "prismjs/themes/prism.css";
+import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
+import Prism from "prismjs";
+import CodeSyntax from "@toast-ui/editor-plugin-color-syntax";
+import CodeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
+import { breakPoints } from "../_styles/breakPoints";
+import { useRouter } from "next/navigation";
 
 export default function WriteEditComponent({
   title,
   contents,
   thumbnail,
 }: IWriteProps) {
+  const [preview, setPreview] = useState<IPreview>("vertical");
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
   // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
   const [selectedCategory, setSelectedCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
+  const [blogTitle, setBlogTitle] = useState("");
+  const [blogThumbnail, setBlogThumbnail] = useState("");
+
+  const editorRef = useRef<Editor>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPreview(window.innerWidth > breakPoints.medium ? "vertical" : "tab");
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchAndSetCategoryList = async () => {
-      const data = await fetchCategoryListAPI();
+      const data = await categoryListAPI();
 
       const categoryListWithNew = data.map((el) => ({
         id: el.id,
-        category: el.category,
-        value: el.category,
+        name: el.name,
       }));
 
       categoryListWithNew.push({
         id: "custom",
-        category: "신규 등록",
-        value: "custom",
+        name: "신규 등록",
       });
 
       setCategoryList(categoryListWithNew);
-      setSelectedCategory(categoryList[0]?.value);
+      setSelectedCategory(categoryListWithNew[0]?.id);
     };
 
     fetchAndSetCategoryList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const fetchCategoryListAPI = async () => {
-    await sleep();
-
-    return [
-      {
-        id: "1",
-        category: "category1",
-        blog: [
-          { id: 1, title: "blog1", date: new Date() },
-          { id: 2, title: "blog2", date: new Date() },
-        ],
-      },
-    ];
-  };
 
   const handleCategory = (
     e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -63,20 +80,75 @@ export default function WriteEditComponent({
       setNewCategory(e.target.value);
   };
 
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setBlogTitle(e.target.value);
+  };
+
+  const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setBlogThumbnail(base64String);
+      };
+
+      // 파일을 Base64 문자열로 읽음
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleWriteBlog = async () => {
+    const blogContents = editorRef.current?.getInstance().getHTML();
+
+    const createBlog = async (categoryId: string) => {
+      const blogResponse = await blogWriteAPI(
+        blogTitle,
+        blogContents,
+        categoryId,
+        blogThumbnail
+      );
+      if (blogResponse.ok) {
+        console.log("블로그 등록 성공");
+
+        const blogResult = await blogResponse.json();
+        router.push(`/${blogResult.blogId}`);
+      } else {
+        console.log("블로그 등록 실패");
+      }
+    };
+
+    // NOTE 신규 카테고리
+    if (selectedCategory === "custom" && newCategory) {
+      const categoryResponse = await categoryWriteAPI(newCategory);
+
+      if (categoryResponse.ok) {
+        const categoryData = await categoryResponse.json();
+        createBlog(categoryData.id);
+      }
+    }
+    // NOTE 기존 카테고리
+    else {
+      createBlog(selectedCategory);
+    }
+  };
+
   return (
     <S.Container>
-      <S.Title placeholder="제목을 입력하세요" />
+      <S.Title placeholder="제목을 입력하세요" onChange={handleTitleChange} />
       <S.ThumbnailCategoryContainer>
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>썸네일</S.ThumbnailTitle>
-          <S.ThumbnailInput type="file" />
+          <S.ThumbnailInput type="file" onChange={handleThumbnailChange} />
         </S.ThumbnailContainer>
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>카테고리</S.ThumbnailTitle>
           <S.CategorySelectBox onChange={handleCategory}>
             {categoryList.map((category) => (
-              <option key={category.id} value={category.value}>
-                {category.category}
+              <option key={category.id} value={category.id}>
+                {category.name}
               </option>
             ))}
           </S.CategorySelectBox>
@@ -86,12 +158,23 @@ export default function WriteEditComponent({
         </S.ThumbnailContainer>
       </S.ThumbnailCategoryContainer>
       <S.EditorContainer>
-        <WriteEditor />
+        <Editor
+          ref={editorRef}
+          previewStyle={preview}
+          initialValue={contents || " "}
+          height="100%"
+          initialEditType="markdown"
+          useCommandShortcut={false}
+          plugins={[
+            [CodeSyntax],
+            [CodeSyntaxHighlight, { highlighter: Prism }],
+          ]}
+        />
       </S.EditorContainer>
 
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
-        <S.TextButton>작성하기</S.TextButton>
+        <S.TextButton onClick={handleWriteBlog}>작성하기</S.TextButton>
       </S.BottomContainer>
     </S.Container>
   );

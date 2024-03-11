@@ -11,6 +11,13 @@ export const categoryListAPI = async (): Promise<ICategoryList[]> => {
   return response.json();
 };
 
+export const categoryWriteAPI = async (name: string) => {
+  return fetch("/api/category", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
+};
+
 export const blogDetailAPI = async (id: string) => {
   const response = await fetch(`/api/blog/${id}`);
   return response.json();
@@ -19,6 +26,7 @@ export const blogDetailAPI = async (id: string) => {
 export const blogWriteAPI = (
   title: string,
   contents: string,
+  categoryId: string,
   thumbnail?: string
 ) => {
   return fetch("/api/write", {
@@ -27,6 +35,7 @@ export const blogWriteAPI = (
       title,
       contents,
       thumbnail,
+      categoryId,
     }),
   });
 };

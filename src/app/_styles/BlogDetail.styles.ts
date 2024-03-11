@@ -72,6 +72,7 @@ export const ThumbnailContentsContainer = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 75%;
   gap: 50px;
 
@@ -88,9 +89,12 @@ export const Thumbnail = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 70%;
   height: 350px;
-  border: 1px solid blue;
+
+  @media screen and (max-width: ${breakPoints.medium}px) {
+    width: 100%;
+  }
 `;
 
 export const Contents = styled.div`
