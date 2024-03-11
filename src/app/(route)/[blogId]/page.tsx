@@ -61,6 +61,8 @@ export default function BlogDetail({ params }: IParams) {
             <Image
               src={blogDetail?.thumbnail ? blogDetail.thumbnail : ""}
               alt="썸네일"
+              width={100}
+              height={100}
             />
           </S.Thumbnail>
           <S.Contents>

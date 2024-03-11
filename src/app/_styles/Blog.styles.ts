@@ -37,7 +37,7 @@ export const BlogContainer = styled.div`
 export const ThumbnailContainer = styled.div`
   width: 30%;
   height: 100%;
-  border: 1px solid gray;
+  overflow: hidden;
 
   @media screen and (max-width: ${breakPoints.medium}px) {
     width: 40%;

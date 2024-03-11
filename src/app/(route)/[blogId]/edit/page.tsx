@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import WriteEditComponent from "@/app/_components/WriteEdit";
+import NoSSRWriteEdit from "@/app/_components/WriteEditor";
 
 export default function Edit() {
   const [title, setTitle] = useState("");
@@ -8,10 +8,6 @@ export default function Edit() {
   const [thumbnail, setThumbnail] = useState("");
 
   return (
-    <WriteEditComponent
-      title={title}
-      contents={contents}
-      thumbnail={thumbnail}
-    />
+    <NoSSRWriteEdit title={title} contents={contents} thumbnail={thumbnail} />
   );
 }

@@ -1,6 +1,6 @@
 "use client";
-import WriteEditComponent from "@/app/_components/WriteEdit";
+import NoSSRWriteEdit from "@/app/_components/WriteEditor";
 
 export default function Write() {
-  return <WriteEditComponent />;
+  return <NoSSRWriteEdit />;
 }

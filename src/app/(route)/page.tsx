@@ -28,7 +28,12 @@ export default function Blog() {
           onClick={() => handleMoveToDetail(blog.id)}
         >
           <S.ThumbnailContainer>
-            <Image src={blog.thumbnail || ""} alt="블로그 썸네일" />
+            <Image
+              src={blog.thumbnail || ""}
+              alt="블로그 썸네일"
+              width={100}
+              height={100}
+            />
           </S.ThumbnailContainer>
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
