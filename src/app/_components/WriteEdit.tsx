@@ -31,8 +31,10 @@ export default function WriteEditComponent({
   // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
   const [selectedCategory, setSelectedCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [blogTitle, setBlogTitle] = useState("");
-  const [blogThumbnail, setBlogThumbnail] = useState("");
+  const [blogTitle, setBlogTitle] = useState(title || "");
+  const [blogThumbnail, setBlogThumbnail] = useState<File | null>(
+    thumbnail || null
+  );
 
   const editorRef = useRef<Editor>(null);
 
@@ -86,17 +88,7 @@ export default function WriteEditComponent({
 
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setBlogThumbnail(base64String);
-      };
-
-      // 파일을 Base64 문자열로 읽음
-      reader.readAsDataURL(file);
+      setBlogThumbnail(e.target.files[0]);
     }
   };
 
@@ -104,12 +96,14 @@ export default function WriteEditComponent({
     const blogContents = editorRef.current?.getInstance().getHTML();
 
     const createBlog = async (categoryId: string) => {
-      const blogResponse = await blogWriteAPI(
-        blogTitle,
-        blogContents,
-        categoryId,
-        blogThumbnail
-      );
+      const formData = new FormData();
+      formData.append("title", blogTitle);
+      formData.append("contents", blogContents);
+      formData.append("categoryId", categoryId);
+      if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
+
+      const blogResponse = await blogWriteAPI(formData);
+
       if (blogResponse.ok) {
         console.log("블로그 등록 성공");
 
@@ -137,11 +131,16 @@ export default function WriteEditComponent({
 
   return (
     <S.Container>
-      <S.Title placeholder="제목을 입력하세요" onChange={handleTitleChange} />
+      <S.Title
+        placeholder="제목을 입력하세요"
+        onChange={handleTitleChange}
+        value={blogTitle}
+      />
       <S.ThumbnailCategoryContainer>
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>썸네일</S.ThumbnailTitle>
           <S.ThumbnailInput type="file" onChange={handleThumbnailChange} />
+          {blogThumbnail && <p>{blogThumbnail.name}</p>}
         </S.ThumbnailContainer>
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>카테고리</S.ThumbnailTitle>

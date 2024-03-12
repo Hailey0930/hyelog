@@ -3,7 +3,7 @@ export type IPreview = "vertical" | "tab";
 export interface IWriteProps {
   title?: string;
   contents?: string;
-  thumbnail?: string;
+  thumbnail?: File;
 }
 
 export interface IWriteCategoryList {
