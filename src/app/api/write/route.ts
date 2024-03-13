@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../_lib/prisma";
-import { put } from "@vercel/blob";
+import { fileUpload } from "@/app/_utils/fileUpload";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { title, contents, categoryId, thumbnail } = body;
+  const formData = await request.formData();
 
-  let thumbnailUrl = null;
+  const title = formData.get("title")?.toString() || "";
+  const contents = formData.get("contents")?.toString() || "";
+  const categoryId = formData.get("categoryId")?.toString() || "";
 
-  if (thumbnail) {
-    const blob = await put("test", thumbnail, {
-      access: "public",
-    });
-    thumbnailUrl = blob.url;
-  }
+  const thumbnail = formData.get("thumbnail") as File;
+
+  // formData.get("thumbnail") instanceof File
+  //   ? (formData.get("thumbnail") as File)
+  //   : null;
+
+  const thumbnailUrl = await fileUpload(thumbnail);
 
   const result = await prisma.blog.create({
     data: {

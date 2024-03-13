@@ -96,18 +96,14 @@ export default function WriteEditComponent({
     const blogContents = editorRef.current?.getInstance().getHTML();
 
     const createBlog = async (categoryId: string) => {
-      // const formData = new FormData();
-      // formData.append("title", blogTitle);
-      // formData.append("contents", blogContents);
-      // formData.append("categoryId", categoryId);
-      // if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
+      const formData = new FormData();
+      formData.append("title", blogTitle);
+      formData.append("contents", blogContents);
+      formData.append("categoryId", categoryId);
 
-      const blogResponse = await blogWriteAPI(
-        blogTitle,
-        blogContents,
-        categoryId,
-        blogThumbnail
-      );
+      if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
+
+      const blogResponse = await blogWriteAPI(formData);
 
       if (blogResponse.ok) {
         console.log("블로그 등록 성공");
