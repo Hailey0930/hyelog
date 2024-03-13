@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { IBlog } from "../types/Blog.types";
 import dayjs from "dayjs";
 import { blogListAPI } from "../_client/api";
+import NoImage from "../../../public/icon_noImage.png";
 
 export default function Blog() {
   const [blogList, setBlogList] = useState<IBlog[]>([]);
@@ -29,7 +30,7 @@ export default function Blog() {
         >
           <S.ThumbnailContainer>
             <Image
-              src={blog.thumbnail || ""}
+              src={blog.thumbnail || NoImage}
               alt="블로그 썸네일"
               width={100}
               height={100}

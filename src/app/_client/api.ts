@@ -23,10 +23,10 @@ export const blogDetailAPI = async (id: string) => {
   return response.json();
 };
 
-export const blogWriteAPI = (formData: FormData) => {
+export const blogWriteAPI = (data: FormData) => {
   return fetch("/api/write", {
     method: "POST",
-    body: formData,
+    body: data,
   });
 };
 

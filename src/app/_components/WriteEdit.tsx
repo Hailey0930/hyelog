@@ -100,6 +100,7 @@ export default function WriteEditComponent({
       formData.append("title", blogTitle);
       formData.append("contents", blogContents);
       formData.append("categoryId", categoryId);
+
       if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
 
       const blogResponse = await blogWriteAPI(formData);
