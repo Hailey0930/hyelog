@@ -125,7 +125,7 @@ export default function WriteEditComponent({
 
       if (categoryResponse.ok) {
         const categoryData = await categoryResponse.json();
-        createBlog(categoryData.id);
+        createBlog(categoryData.categoryId);
       }
     }
     // NOTE 기존 카테고리
