@@ -40,6 +40,15 @@ export default function BlogDetail({ params }: IParams) {
     );
   };
 
+  interface CustomImgLoader {
+    src: string;
+    width: number;
+  }
+
+  const customImgLoader = ({ src, width }: CustomImgLoader) => {
+    return `${src}?w=${width}`;
+  };
+
   return (
     <S.Container>
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
@@ -59,6 +68,7 @@ export default function BlogDetail({ params }: IParams) {
         <S.ThumbnailContentsContainer $isSidebarOpen={isSidebarOpen}>
           <S.Thumbnail>
             <Image
+              loader={customImgLoader}
               src={blogDetail?.thumbnail ? blogDetail.thumbnail : ""}
               alt="썸네일"
               width={100}
