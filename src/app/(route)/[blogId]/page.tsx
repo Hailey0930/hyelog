@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import DetailViewer from "@/app/_components/DetailViewer";
 import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
+import NoImage from "../../../../public/icon_noImage.png";
 
 export default function BlogDetail({ params }: IParams) {
   const indexArr = ["#1", "##2", "###3", "####4", "#5"];
@@ -40,15 +41,6 @@ export default function BlogDetail({ params }: IParams) {
     );
   };
 
-  interface CustomImgLoader {
-    src: string;
-    width: number;
-  }
-
-  const customImgLoader = ({ src, width }: CustomImgLoader) => {
-    return `${src}?w=${width}`;
-  };
-
   return (
     <S.Container>
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
@@ -68,8 +60,7 @@ export default function BlogDetail({ params }: IParams) {
         <S.ThumbnailContentsContainer $isSidebarOpen={isSidebarOpen}>
           <S.Thumbnail>
             <Image
-              loader={customImgLoader}
-              src={blogDetail?.thumbnail ? blogDetail.thumbnail : ""}
+              src={blogDetail?.thumbnail ? blogDetail.thumbnail : NoImage}
               alt="썸네일"
               width={100}
               height={100}
