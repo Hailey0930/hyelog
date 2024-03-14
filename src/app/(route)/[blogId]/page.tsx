@@ -78,8 +78,8 @@ export default function BlogDetail({ params }: IParams) {
         {contentsHeaderList && (
           <S.ContentsHeaderContainer $isSidebarOpen={isSidebarOpen}>
             <S.HeaderContainer>
-              {contentsHeaderList.map((header, index) => (
-                <S.ContentsHeader key={index} $level={parseInt(header.tag)}>
+              {contentsHeaderList.map((header) => (
+                <S.ContentsHeader key={header.id} $level={parseInt(header.tag)}>
                   {header.content}
                 </S.ContentsHeader>
               ))}

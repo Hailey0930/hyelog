@@ -7,9 +7,9 @@ describe("exportContentsHeaderTest", () => {
     const result = exportContentsHeader(testText);
 
     expect(result).toEqual([
-      { tag: "1", content: "설기" },
-      { tag: "2", content: "배포 테스트" },
-      { tag: "1", content: "제발!!!" },
+      { id: "설기0", tag: "1", content: "설기" },
+      { id: "배포 테스트1", tag: "2", content: "배포 테스트" },
+      { id: "제발!!!2", tag: "1", content: "제발!!!" },
     ]);
   });
 

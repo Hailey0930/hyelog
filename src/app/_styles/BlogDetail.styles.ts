@@ -129,7 +129,9 @@ export const HeaderContainer = styled.div`
   gap: 15px;
 `;
 
-export const ContentsHeader = styled.div<{ $level: number }>`
+export const ContentsHeader = styled.div<{
+  $level: number;
+}>`
   font-size: ${({ $level }) =>
     $level === 1
       ? "var(--font-size-300)"
@@ -147,5 +149,4 @@ export const ContentsHeader = styled.div<{ $level: number }>`
       ? "20px"
       : "30px"};
   color: var(--white-color-700);
-  cursor: pointer;
 `;

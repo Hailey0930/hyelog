@@ -12,6 +12,7 @@ export type IBlogParams = {
 };
 
 export type IContentsHeaderList = {
+  id: string;
   tag: string;
   content: string;
 };
