@@ -4,7 +4,13 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    remotePatterns: [{ hostname: "*.public.blob.vercel-storage.com" }],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        port: "",
+      },
+    ],
   },
 };
 
