@@ -105,7 +105,7 @@ export const Contents = styled.div`
   border-radius: 5px;
 `;
 
-export const IndexContainer = styled.div<{ $isSidebarOpen: boolean }>`
+export const ContentsHeaderContainer = styled.div<{ $isSidebarOpen: boolean }>`
   width: 20%;
   height: fit-content;
   padding: 30px 10px;
@@ -122,22 +122,22 @@ export const IndexContainer = styled.div<{ $isSidebarOpen: boolean }>`
   }
 `;
 
-export const IndexWrapper = styled.div`
+export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
   gap: 15px;
 `;
 
-export const Index = styled.div<{ $level: number }>`
+export const ContentsHeader = styled.div<{ $level: number }>`
   font-size: ${({ $level }) =>
     $level === 1
-      ? "var(--font-size-200)"
-      : $level === 2
       ? "var(--font-size-300)"
-      : $level === 3
+      : $level === 2
       ? "var(--font-size-400)"
-      : "var(--font-size-500)"};
+      : $level === 3
+      ? "var(--font-size-500)"
+      : "var(--font-size-600)"};
   padding-left: ${({ $level }) =>
     $level === 1
       ? "0"

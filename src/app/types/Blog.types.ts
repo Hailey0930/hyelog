@@ -10,3 +10,8 @@ export interface IBlog {
 export type IBlogParams = {
   params: { blogId: string };
 };
+
+export type IContentsHeaderList = {
+  tag: string;
+  content: string;
+};
