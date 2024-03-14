@@ -5,17 +5,18 @@ import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlog } from "@/app/types/Blog.types";
+import { IBlog, IContentsHeaderList } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
 import DetailViewer from "@/app/_components/DetailViewer";
 import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
+import { exportContentsHeader } from "@/app/_utils/exportContentsHeader";
 
 export default function BlogDetail({ params }: IParams) {
-  const indexArr = ["#1", "##2", "###3", "####4", "#5"];
-
   const [blogDetail, setBlogDetail] = useState<IBlog>();
+  const [contentsHeaderList, setContentsHeaderList] =
+    useState<IContentsHeaderList[]>();
 
   const isSidebarOpen = useRecoilValue(sidebarState);
 
@@ -24,6 +25,10 @@ export default function BlogDetail({ params }: IParams) {
   useEffect(() => {
     blogDetailAPI(params.blogId).then((data) => setBlogDetail(data));
   }, [params]);
+
+  useEffect(() => {
+    setContentsHeaderList(exportContentsHeader(blogDetail?.contents));
+  }, [blogDetail]);
 
   const handleMoveToList = () => {
     router.push("/");
@@ -70,20 +75,17 @@ export default function BlogDetail({ params }: IParams) {
             <DetailViewer contents={blogDetail?.contents || ""} />
           </S.Contents>
         </S.ThumbnailContentsContainer>
-        <S.IndexContainer $isSidebarOpen={isSidebarOpen}>
-          <S.IndexWrapper>
-            {indexArr.map((title, index) => {
-              const match = title.match(/^#+/);
-              const level = match ? match[0].split("").length : 0;
-
-              return (
-                <S.Index key={index} $level={level}>
-                  {title.substring(level)}
-                </S.Index>
-              );
-            })}
-          </S.IndexWrapper>
-        </S.IndexContainer>
+        {contentsHeaderList && (
+          <S.ContentsHeaderContainer $isSidebarOpen={isSidebarOpen}>
+            <S.HeaderContainer>
+              {contentsHeaderList.map((header) => (
+                <S.ContentsHeader key={header.id} $level={parseInt(header.tag)}>
+                  {header.content}
+                </S.ContentsHeader>
+              ))}
+            </S.HeaderContainer>
+          </S.ContentsHeaderContainer>
+        )}
       </S.ContentsContainer>
     </S.Container>
   );
