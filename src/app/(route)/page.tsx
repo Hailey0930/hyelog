@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlog } from "../types/Blog.types";
 import dayjs from "dayjs";
-import { blogListAPI } from "../_client/api";
+import { blogListAPI } from "@/app/_client/api";
 import NoImage from "../../../public/icon_noImage.png";
 
 export default function Blog() {
