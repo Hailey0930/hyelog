@@ -1,12 +1,12 @@
 "use client";
-import Image from "next/image";
+// import Image from "next/image";
 import * as S from "../_styles/Blog.styles";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlog } from "../types/Blog.types";
 import dayjs from "dayjs";
 import { blogListAPI } from "@/app/_client/api";
-import NoImage from "../../../public/icon_noImage.png";
+// import NoImage from "../../../public/icon_noImage.png";
 
 export default function Blog() {
   const [blogList, setBlogList] = useState<IBlog[]>([]);
@@ -28,14 +28,14 @@ export default function Blog() {
           key={blog.id}
           onClick={() => handleMoveToDetail(blog.id)}
         >
-          <S.ThumbnailContainer>
+          {/* <S.ThumbnailContainer>
             <Image
               src={blog.thumbnail || NoImage}
               alt="블로그 썸네일"
               width={100}
               height={100}
             />
-          </S.ThumbnailContainer>
+          </S.ThumbnailContainer> */}
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
             <S.Date>{dayjs(blog.date).format("YYYY.MM.DD")}</S.Date>
