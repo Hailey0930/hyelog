@@ -4,7 +4,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(): Promise<NextResponse<IBlog[]> | undefined> {
   try {
-    const blogs = await prisma.blog.findMany();
+    const blogs = await prisma.blog.findMany({
+      include: {
+        Category: true,
+      },
+    });
 
     return NextResponse.json(blogs);
   } catch (error) {
