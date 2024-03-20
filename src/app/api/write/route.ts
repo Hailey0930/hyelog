@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       title,
       contents,
       categoryId,
-      thumbnail: thumbnailUrl,
+      thumbnail: thumbnailUrl?.secure_url,
     },
   });
 
