@@ -3,6 +3,7 @@ import prisma from "../../../../_lib/prisma";
 import { IBlog, IBlogParams } from "@/app/types/Blog.types";
 import { deleteEmptyCategory } from "@/app/_utils/deleteEmptyCategory";
 import { deleteFile } from "@/app/_utils/fileDelete";
+import { fileUpload } from "@/app/_utils/fileUpload";
 
 export async function GET(
   request: NextRequest,
@@ -47,5 +48,41 @@ export async function DELETE(request: NextRequest, { params }: IBlogParams) {
     console.log(error);
 
     return NextResponse.json({ message: "삭제 실패" });
+  }
+}
+
+export async function PUT(request: NextRequest, { params }: IBlogParams) {
+  try {
+    const blogId = params.blogId || "";
+
+    const formData = await request.formData();
+
+    const title = formData.get("title")?.toString() || "";
+    const contents = formData.get("contents")?.toString() || "";
+    const categoryId = formData.get("categoryId")?.toString() || "";
+    const thumbnail = formData.get("thumbnail") as File;
+
+    const thumbnailUrl = await fileUpload(thumbnail);
+
+    const result = await prisma.blog.update({
+      where: { id: blogId },
+      data: {
+        title,
+        contents,
+        categoryId,
+        thumbnailUrl: thumbnailUrl?.secure_url,
+        thumbnailId: thumbnailUrl?.public_id,
+      },
+    });
+
+    return NextResponse.json({
+      message: "수정 성공",
+      blogId: result.id,
+      status: 200,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json({ message: "수정 실패" });
   }
 }

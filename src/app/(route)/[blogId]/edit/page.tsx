@@ -1,13 +1,7 @@
 "use client";
-import { useState } from "react";
 import NoSSRWriteEdit from "@/app/_components/WriteEditor";
+import { IParams } from "@/app/types/params.types";
 
-export default function Edit() {
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
-  const [thumbnail, setThumbnail] = useState<File>();
-
-  return (
-    <NoSSRWriteEdit title={title} contents={contents} thumbnail={thumbnail} />
-  );
+export default function Edit({ params }: IParams) {
+  return <NoSSRWriteEdit params={params} />;
 }

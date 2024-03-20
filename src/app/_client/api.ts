@@ -30,19 +30,10 @@ export const blogWriteAPI = (data: FormData) => {
   });
 };
 
-export const blogEditAPI = (
-  id: string,
-  title: string,
-  contents: string,
-  thumbnail: string
-) => {
+export const blogEditAPI = (id: string, data: FormData) => {
   return fetch(`/api/blog/${id}`, {
     method: "PUT",
-    body: JSON.stringify({
-      title,
-      contents,
-      thumbnail,
-    }),
+    body: data,
   });
 };
 
