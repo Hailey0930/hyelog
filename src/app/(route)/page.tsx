@@ -30,7 +30,7 @@ export default function Blog() {
         >
           <S.ThumbnailContainer>
             <Image
-              src={blog.thumbnail || NoImage}
+              src={blog.thumbnailUrl || NoImage}
               alt="블로그 썸네일"
               width={100}
               height={100}
@@ -39,7 +39,6 @@ export default function Blog() {
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
             <S.Date>{dayjs(blog.date).format("YYYY.MM.DD")}</S.Date>
-            <S.Contents>{blog.contents}</S.Contents>
           </S.ContentContainer>
         </S.BlogContainer>
       ))}

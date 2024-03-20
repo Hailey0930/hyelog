@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
       title,
       contents,
       categoryId,
-      thumbnail: thumbnailUrl?.secure_url,
+      thumbnailUrl: thumbnailUrl?.secure_url,
+      thumbnailId: thumbnailUrl?.public_id,
     },
   });
 

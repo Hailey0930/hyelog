@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Blog {
-  id          String     @default(cuid()) @id
-  title       String
-  contents    String
-  thumbnail   String?
-  date        DateTime   @default(now()) @map(name: "date")
-  categoryId  String     
-  Category    Category   @relation(fields: [categoryId], references: [id])
-  images      Image[]
+  id             String     @default(cuid()) @id
+  title          String
+  contents       String
+  thumbnailUrl   String?
+  thumbnailId    String?
+  date           DateTime   @default(now()) @map(name: "date")
+  categoryId     String     
+  Category       Category   @relation(fields: [categoryId], references: [id])
+  images         Image[]
 }
 
 model Category {

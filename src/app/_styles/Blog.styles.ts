@@ -42,39 +42,36 @@ export const ThumbnailContainer = styled.div`
   @media screen and (max-width: ${breakPoints.medium}px) {
     width: 40%;
   }
+
+  @media screen and (max-width: ${breakPoints.small}px) {
+    width: 50%;
+  }
 `;
 
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   width: 50%;
   height: 100%;
   padding: 10px;
-  gap: 15px;
 `;
 
 export const Title = styled.div`
-  font-size: var(--font-size-400);
+  font-size: var(--font-size-200);
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   @media screen and (max-width: ${breakPoints.small}px) {
-    font-size: var(--font-size-600);
+    font-size: var(--font-size-400);
   }
 `;
 
 export const Date = styled.div`
-  font-size: var(--font-size-700);
+  font-size: var(--font-size-600);
   color: var(--white-color-700);
-
-  @media screen and (max-width: ${breakPoints.small}px) {
-    font-size: 1.4rem;
-  }
-`;
-
-export const Contents = styled.div`
-  font-size: var(--font-size-500);
-  margin-top: 30px;
 
   @media screen and (max-width: ${breakPoints.small}px) {
     font-size: var(--font-size-700);
