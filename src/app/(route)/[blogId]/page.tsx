@@ -63,14 +63,16 @@ export default function BlogDetail({ params }: IParams) {
       </S.BlogContainer>
       <S.ContentsContainer>
         <S.ThumbnailContentsContainer $isSidebarOpen={isSidebarOpen}>
-          <S.Thumbnail>
-            <Image
-              src={blogDetail?.thumbnail ? blogDetail.thumbnail : NoImage}
-              alt="썸네일"
-              width={100}
-              height={100}
-            />
-          </S.Thumbnail>
+          {blogDetail?.thumbnail && (
+            <S.Thumbnail>
+              <Image
+                src={blogDetail?.thumbnail ? blogDetail.thumbnail : NoImage}
+                alt="썸네일"
+                width={100}
+                height={100}
+              />
+            </S.Thumbnail>
+          )}
           <S.Contents>
             <DetailViewer contents={blogDetail?.contents || ""} />
           </S.Contents>

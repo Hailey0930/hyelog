@@ -39,7 +39,6 @@ export default function Blog() {
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
             <S.Date>{dayjs(blog.date).format("YYYY.MM.DD")}</S.Date>
-            <S.Contents>{blog.contents}</S.Contents>
           </S.ContentContainer>
         </S.BlogContainer>
       ))}
