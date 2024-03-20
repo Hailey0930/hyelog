@@ -30,7 +30,7 @@ export default function Blog() {
         >
           <S.ThumbnailContainer>
             <Image
-              src={blog.thumbnail || NoImage}
+              src={blog.thumbnailUrl || NoImage}
               alt="블로그 썸네일"
               width={100}
               height={100}

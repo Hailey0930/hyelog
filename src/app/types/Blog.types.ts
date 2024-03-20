@@ -3,7 +3,8 @@ export interface IBlog {
   title: string;
   contents: string;
   date: Date;
-  thumbnail: any;
+  thumbnailUrl: string | null;
+  thumbnailId: string | null;
   categoryId: string;
 }
 
