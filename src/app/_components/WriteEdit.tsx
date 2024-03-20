@@ -1,12 +1,10 @@
 "use client";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import * as S from "../_styles/Write.styles";
+import { IPreview, IWriteCategoryList } from "../types/WriteEditor.types";
 import {
-  IPreview,
-  IWriteCategoryList,
-  IWriteProps,
-} from "../types/WriteEditor.types";
-import {
+  blogDetailAPI,
+  blogEditAPI,
   blogWriteAPI,
   categoryListAPI,
   categoryWriteAPI,
@@ -20,25 +18,38 @@ import CodeSyntax from "@toast-ui/editor-plugin-color-syntax";
 import CodeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import { breakPoints } from "../_styles/breakPoints";
 import { useRouter } from "next/navigation";
+import { IParams } from "../types/params.types";
 
-export default function WriteEditComponent({
-  title,
-  contents,
-  thumbnail,
-}: IWriteProps) {
+export default function WriteEditComponent({ params }: IParams) {
   const [preview, setPreview] = useState<IPreview>("vertical");
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
   // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
   const [selectedCategory, setSelectedCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [blogTitle, setBlogTitle] = useState(title || "");
-  const [blogThumbnail, setBlogThumbnail] = useState<File | null>(
-    thumbnail || null
-  );
+  const [blogTitle, setBlogTitle] = useState("");
+  const [blogThumbnail, setBlogThumbnail] = useState<File | null>(null);
+  const [blogContents, setBlogContents] = useState("");
 
   const editorRef = useRef<Editor>(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (params) {
+      blogDetailAPI(params.blogId).then((data) => {
+        setSelectedCategory(data.category);
+        setBlogTitle(data.title);
+        setBlogContents(data.contents);
+      });
+    }
+  }, [params]);
+
+  useEffect(() => {
+    if (params && blogContents) {
+      const htmlString = blogContents;
+      editorRef.current?.getInstance().setHTML(htmlString);
+    }
+  }, [params, blogContents]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -103,7 +114,9 @@ export default function WriteEditComponent({
 
       if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
 
-      const blogResponse = await blogWriteAPI(formData);
+      const blogResponse = params
+        ? await blogEditAPI(params.blogId, formData)
+        : await blogWriteAPI(formData);
 
       if (blogResponse.ok) {
         console.log("블로그 등록 성공");
@@ -141,7 +154,6 @@ export default function WriteEditComponent({
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>썸네일</S.ThumbnailTitle>
           <S.ThumbnailInput type="file" onChange={handleThumbnailChange} />
-          {blogThumbnail && <p>{blogThumbnail.name}</p>}
         </S.ThumbnailContainer>
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>카테고리</S.ThumbnailTitle>
@@ -161,7 +173,7 @@ export default function WriteEditComponent({
         <Editor
           ref={editorRef}
           previewStyle={preview}
-          initialValue={contents || " "}
+          initialValue={blogContents || " "}
           height="100%"
           initialEditType="markdown"
           useCommandShortcut={false}
@@ -174,7 +186,9 @@ export default function WriteEditComponent({
 
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
-        <S.TextButton onClick={handleWriteBlog}>작성하기</S.TextButton>
+        <S.TextButton onClick={handleWriteBlog}>
+          {params ? "수정하기" : "작성하기"}
+        </S.TextButton>
       </S.BottomContainer>
     </S.Container>
   );

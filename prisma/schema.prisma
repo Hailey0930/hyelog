@@ -30,7 +30,7 @@ model Category {
 
 model Image {
   id          String     @default(cuid())  @id
-  data        Bytes
+  url         String
   blogId      String
   Blog        Blog       @relation(fields: [blogId], references: [id])
 }
