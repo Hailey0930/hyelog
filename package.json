@@ -16,7 +16,7 @@
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
     "@toast-ui/react-editor": "^3.2.3",
-    "@vercel/blob": "^0.22.1",
+    "cloudinary": "^2.0.3",
     "dayjs": "^1.11.10",
     "next": "14.1.0",
     "prismjs": "^1.29.0",
