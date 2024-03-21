@@ -12,6 +12,8 @@ import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
 import { exportContentsHeader } from "@/app/_utils/exportContentsHeader";
+import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
+import Loading from "@/app/_components/Loading";
 
 export default function BlogDetail({ params }: IParams) {
   const [blogDetail, setBlogDetail] = useState<IBlog>();
@@ -22,9 +24,15 @@ export default function BlogDetail({ params }: IParams) {
 
   const router = useRouter();
 
+  const { isLoading, callApi } = useApiLoadingControl<IBlog>();
+
   useEffect(() => {
-    blogDetailAPI(params.blogId).then((data) => setBlogDetail(data));
-  }, [params]);
+    const fetchBlog = async () => {
+      const blog = await callApi(blogDetailAPI, params.blogId);
+      setBlogDetail(blog);
+    };
+    fetchBlog();
+  }, [callApi, params]);
 
   useEffect(() => {
     setContentsHeaderList(exportContentsHeader(blogDetail?.contents));
@@ -48,6 +56,7 @@ export default function BlogDetail({ params }: IParams) {
 
   return (
     <S.Container>
+      {isLoading && <Loading />}
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
         <S.BlogInfoContainer>
           <S.BlogTitle>{blogDetail?.title}</S.BlogTitle>

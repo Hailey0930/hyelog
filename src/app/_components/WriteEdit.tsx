@@ -19,6 +19,9 @@ import CodeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import { breakPoints } from "../_styles/breakPoints";
 import { useRouter } from "next/navigation";
 import { IParams } from "../types/params.types";
+import useApiLoadingControl from "../_utils/useApiLoadingControl";
+import { IBlog } from "../types/Blog.types";
+import Loading from "./Loading";
 // import { fileUpload } from "../_utils/fileUpload";
 
 export default function WriteEditComponent({ params }: IParams) {
@@ -27,6 +30,7 @@ export default function WriteEditComponent({ params }: IParams) {
   // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
   const [selectedCategory, setSelectedCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
+  const [blogDetail, setBlogDetail] = useState<IBlog>();
   const [blogTitle, setBlogTitle] = useState("");
   const [blogThumbnail, setBlogThumbnail] = useState<File | null>(null);
   const [blogContents, setBlogContents] = useState("");
@@ -35,18 +39,29 @@ export default function WriteEditComponent({ params }: IParams) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (params) {
-      blogDetailAPI(params.blogId).then((data) => {
-        setSelectedCategory(data.category);
-        setBlogTitle(data.title);
-        setBlogContents(data.contents);
-      });
-    }
-  }, [params]);
+  const { isLoading: isDetailLoading, callApi: callDetailApi } =
+    useApiLoadingControl<IBlog>();
+  const { isLoading: isCategoryListLoading, callApi: callCategoryListApi } =
+    useApiLoadingControl<IWriteCategoryList[]>();
+  const { isLoading: isWriteLoading, callApi: callWriteApi } =
+    useApiLoadingControl<Response>();
+  const { isLoading: isCategoryWriteLoading, callApi: callCategoryWriteApi } =
+    useApiLoadingControl<Response>();
 
   useEffect(() => {
-    if (params && blogContents) {
+    if (params && params.blogId) {
+      const fetchBlog = async () => {
+        const blog = await callDetailApi(blogDetailAPI, params.blogId);
+        setBlogTitle(blog.title);
+        setBlogContents(blog.contents);
+        setBlogDetail(blog);
+      };
+      fetchBlog();
+    }
+  }, [callDetailApi, params]);
+
+  useEffect(() => {
+    if (params && params.blogId && blogContents) {
       const htmlString = blogContents;
       editorRef.current?.getInstance().setHTML(htmlString);
     }
@@ -66,7 +81,7 @@ export default function WriteEditComponent({ params }: IParams) {
 
   useEffect(() => {
     const fetchAndSetCategoryList = async () => {
-      const data = await categoryListAPI();
+      const data = await callCategoryListApi(categoryListAPI);
 
       const categoryListWithNew = data.map((el) => ({
         id: el.id,
@@ -79,11 +94,21 @@ export default function WriteEditComponent({ params }: IParams) {
       });
 
       setCategoryList(categoryListWithNew);
-      setSelectedCategory(categoryListWithNew[0]?.id);
+
+      if (params && params.blogId) {
+        const existingCategory = categoryListWithNew.find(
+          (category) => category.id === blogDetail?.categoryId
+        );
+        if (existingCategory) {
+          setSelectedCategory(existingCategory.id);
+        }
+      } else {
+        setSelectedCategory(categoryListWithNew[0]?.id);
+      }
     };
 
     fetchAndSetCategoryList();
-  }, []);
+  }, [callCategoryListApi, params, blogDetail]);
 
   const handleCategory = (
     e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -132,9 +157,9 @@ export default function WriteEditComponent({ params }: IParams) {
 
       if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
 
-      const blogResponse = params
-        ? await blogEditAPI(params.blogId, formData)
-        : await blogWriteAPI(formData);
+      const blogResponse = params?.blogId
+        ? await callWriteApi(() => blogEditAPI(params.blogId, formData))
+        : await callWriteApi(() => blogWriteAPI(formData));
 
       if (blogResponse.ok) {
         console.log("블로그 등록 성공");
@@ -148,7 +173,10 @@ export default function WriteEditComponent({ params }: IParams) {
 
     // NOTE 신규 카테고리
     if (selectedCategory === "custom" && newCategory) {
-      const categoryResponse = await categoryWriteAPI(newCategory);
+      const categoryResponse = await callCategoryWriteApi(
+        categoryWriteAPI,
+        newCategory
+      );
 
       if (categoryResponse.ok) {
         const categoryData = await categoryResponse.json();
@@ -163,6 +191,10 @@ export default function WriteEditComponent({ params }: IParams) {
 
   return (
     <S.Container>
+      {(isDetailLoading ||
+        isCategoryListLoading ||
+        isWriteLoading ||
+        isCategoryWriteLoading) && <Loading />}
       <S.Title
         placeholder="제목을 입력하세요"
         onChange={handleTitleChange}
@@ -175,7 +207,10 @@ export default function WriteEditComponent({ params }: IParams) {
         </S.ThumbnailContainer>
         <S.ThumbnailContainer>
           <S.ThumbnailTitle>카테고리</S.ThumbnailTitle>
-          <S.CategorySelectBox onChange={handleCategory}>
+          <S.CategorySelectBox
+            onChange={handleCategory}
+            value={selectedCategory}
+          >
             {categoryList.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -213,7 +248,7 @@ export default function WriteEditComponent({ params }: IParams) {
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
         <S.TextButton onClick={handleWriteBlog}>
-          {params ? "수정하기" : "작성하기"}
+          {params.blogId ? "수정하기" : "작성하기"}
         </S.TextButton>
       </S.BottomContainer>
     </S.Container>

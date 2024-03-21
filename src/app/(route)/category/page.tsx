@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { ICategoryList, IOpenCategories } from "@/app/types/Category.types";
 import dayjs from "dayjs";
 import { categoryListAPI } from "@/app/_client/api";
+import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
+import Loading from "@/app/_components/Loading";
 
 export default function Category() {
   const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
@@ -14,9 +16,15 @@ export default function Category() {
 
   const router = useRouter();
 
+  const { isLoading, callApi } = useApiLoadingControl<ICategoryList[]>();
+
   useEffect(() => {
-    categoryListAPI().then((data) => setCategoryList(data));
-  }, []);
+    const fetchCategoryList = async () => {
+      const categoryList = await callApi(categoryListAPI);
+      setCategoryList(categoryList);
+    };
+    fetchCategoryList();
+  }, [callApi]);
 
   const handleOpenCategories = (id: string) => {
     setOpenCategories((prev) => ({
@@ -31,6 +39,7 @@ export default function Category() {
 
   return (
     <S.Container>
+      {isLoading && <Loading />}
       {categoryList.map((category) => (
         <S.CategoryListContainer key={category.id}>
           <S.CategoryContainer

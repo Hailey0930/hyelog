@@ -16,4 +16,5 @@ const Container = styled.div`
   left: 50%;
   width: 180px;
   height: 180px;
+  z-index: 2;
 `;
