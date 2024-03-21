@@ -19,6 +19,7 @@ import CodeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import { breakPoints } from "../_styles/breakPoints";
 import { useRouter } from "next/navigation";
 import { IParams } from "../types/params.types";
+// import { fileUpload } from "../_utils/fileUpload";
 
 export default function WriteEditComponent({ params }: IParams) {
   const [preview, setPreview] = useState<IPreview>("vertical");
@@ -103,6 +104,23 @@ export default function WriteEditComponent({ params }: IParams) {
     }
   };
 
+  // const handleImagesChange = async (
+  //   blob: Blob | File,
+  //   callback: (url: string, alt?: string) => void
+  // ) => {
+  //   const formData = new FormData();
+  //   formData.append("image", blob);
+
+  //   const image = formData.get("image") as File;
+  //   const imageUrl = await fileUpload(image);
+
+  //   try {
+  //     callback(imageUrl?.secure_url || "", imageUrl?.public_id);
+  //   } catch (error) {
+  //     console.error("Image upload failed:", error);
+  //   }
+  // };
+
   const handleWriteBlog = async () => {
     const blogContents = editorRef.current?.getInstance().getHTML();
 
@@ -181,6 +199,14 @@ export default function WriteEditComponent({ params }: IParams) {
             [CodeSyntax],
             [CodeSyntaxHighlight, { highlighter: Prism }],
           ]}
+          // hooks={{
+          //   addImageBlobHook: (
+          //     blob: Blob | File,
+          //     callback: (url: string, alt?: string) => void
+          //   ) => {
+          //     handleImagesChange(blob, callback);
+          //   },
+          // }}
         />
       </S.EditorContainer>
 
