@@ -11,19 +11,24 @@ export const categoryListAPI = async (): Promise<ICategoryList[]> => {
   return response.json();
 };
 
-export const categoryWriteAPI = async (name: string) => {
+export const categoryWriteAPI = async (...args: (string | FormData)[]) => {
+  const name = args[0];
   return fetch("/api/category", {
     method: "POST",
     body: JSON.stringify({ name }),
   });
 };
 
-export const blogDetailAPI = async (id: string) => {
+export const blogDetailAPI = async (...args: (string | FormData)[]) => {
+  const id = args[0];
   const response = await fetch(`/api/blog/${id}`);
   return response.json();
 };
 
-export const blogWriteAPI = (data: FormData) => {
+export const blogWriteAPI = async (
+  ...args: (string | FormData)[]
+): Promise<Response> => {
+  const data = args[0];
   return fetch("/api/write", {
     method: "POST",
     body: data,

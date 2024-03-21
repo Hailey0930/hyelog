@@ -7,15 +7,23 @@ import { IBlog } from "../types/Blog.types";
 import dayjs from "dayjs";
 import { blogListAPI } from "@/app/_client/api";
 import NoImage from "../../../public/icon_noImage.png";
+import useApiLoadingControl from "../_utils/useApiLoadingControl";
+import Loading from "../_components/Loading";
 
 export default function Blog() {
   const [blogList, setBlogList] = useState<IBlog[]>([]);
 
   const router = useRouter();
 
+  const { isLoading, callApi } = useApiLoadingControl<IBlog[]>();
+
   useEffect(() => {
-    blogListAPI().then((data) => setBlogList(data));
-  }, []);
+    const fetchBlogs = async () => {
+      const blogs = await callApi(blogListAPI);
+      setBlogList(blogs);
+    };
+    fetchBlogs();
+  }, [callApi]);
 
   const handleMoveToDetail = (id: string) => {
     router.push(`/${id}`);
@@ -23,6 +31,7 @@ export default function Blog() {
 
   return (
     <S.Container>
+      {isLoading && <Loading />}
       {blogList.map((blog) => (
         <S.BlogContainer
           key={blog.id}
