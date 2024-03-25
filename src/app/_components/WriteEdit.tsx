@@ -1,7 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import * as S from "../_styles/Write.styles";
-import { IPreview, IWriteCategoryList } from "../types/WriteEditor.types";
+import { IWriteCategoryList } from "../types/WriteEditor.types";
 import {
   blogDetailAPI,
   blogEditAPI,
@@ -9,13 +9,6 @@ import {
   categoryListAPI,
   categoryWriteAPI,
 } from "../_client/api";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "prismjs/themes/prism.css";
-import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import Prism from "prismjs";
-import CodeSyntax from "@toast-ui/editor-plugin-color-syntax";
-import CodeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import { breakPoints } from "../_styles/breakPoints";
 import { useRouter } from "next/navigation";
 import { IParams } from "../types/params.types";
@@ -23,9 +16,12 @@ import useApiLoadingControl from "../_utils/useApiLoadingControl";
 import { IBlog } from "../types/Blog.types";
 import Loading from "./Loading";
 // import { fileUpload } from "../_utils/fileUpload";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
+
+const NoSSRQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function WriteEditComponent({ params }: IParams) {
-  const [preview, setPreview] = useState<IPreview>("vertical");
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
   // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -35,9 +31,18 @@ export default function WriteEditComponent({ params }: IParams) {
   const [blogThumbnail, setBlogThumbnail] = useState<File | null>(null);
   const [blogContents, setBlogContents] = useState("");
 
-  const editorRef = useRef<Editor>(null);
-
   const router = useRouter();
+
+  const toolbar = [
+    [{ header: [1, 2, 3, 4, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image"],
+    [{ align: [] }],
+    [{ color: [] }],
+    ["code-block"],
+    ["clean"],
+  ];
 
   const { isLoading: isDetailLoading, callApi: callDetailApi } =
     useApiLoadingControl<IBlog>();
@@ -59,25 +64,6 @@ export default function WriteEditComponent({ params }: IParams) {
       fetchBlog();
     }
   }, [callDetailApi, params]);
-
-  useEffect(() => {
-    if (params && params.blogId && blogContents) {
-      const htmlString = blogContents;
-      editorRef.current?.getInstance().setHTML(htmlString);
-    }
-  }, [params, blogContents]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setPreview(window.innerWidth > breakPoints.medium ? "vertical" : "tab");
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchAndSetCategoryList = async () => {
@@ -123,6 +109,10 @@ export default function WriteEditComponent({ params }: IParams) {
     setBlogTitle(e.target.value);
   };
 
+  const handleContentsChange = (value: string) => {
+    setBlogContents(value);
+  };
+
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setBlogThumbnail(e.target.files[0]);
@@ -147,8 +137,6 @@ export default function WriteEditComponent({ params }: IParams) {
   // };
 
   const handleWriteBlog = async () => {
-    const blogContents = editorRef.current?.getInstance().getHTML();
-
     const createBlog = async (categoryId: string) => {
       const formData = new FormData();
       formData.append("title", blogTitle);
@@ -223,25 +211,12 @@ export default function WriteEditComponent({ params }: IParams) {
         </S.ThumbnailContainer>
       </S.ThumbnailCategoryContainer>
       <S.EditorContainer>
-        <Editor
-          ref={editorRef}
-          previewStyle={preview}
-          initialValue={blogContents || " "}
-          height="100%"
-          initialEditType="markdown"
-          useCommandShortcut={false}
-          plugins={[
-            [CodeSyntax],
-            [CodeSyntaxHighlight, { highlighter: Prism }],
-          ]}
-          // hooks={{
-          //   addImageBlobHook: (
-          //     blob: Blob | File,
-          //     callback: (url: string, alt?: string) => void
-          //   ) => {
-          //     handleImagesChange(blob, callback);
-          //   },
-          // }}
+        <NoSSRQuill
+          theme="snow"
+          value={blogContents}
+          style={{ height: "95%" }}
+          modules={{ toolbar: toolbar }}
+          onChange={handleContentsChange}
         />
       </S.EditorContainer>
 
