@@ -9,11 +9,10 @@ export async function POST(request: NextRequest) {
   const contents = formData.get("contents")?.toString() || "";
   const categoryId = formData.get("categoryId")?.toString() || "";
 
-  const thumbnail = formData.get("thumbnail") as File;
-
-  // formData.get("thumbnail") instanceof File
-  //   ? (formData.get("thumbnail") as File)
-  //   : null;
+  const thumbnail =
+    formData.get("thumbnail") instanceof File
+      ? (formData.get("thumbnail") as File)
+      : null;
 
   const thumbnailUrl = await fileUpload(thumbnail);
 
