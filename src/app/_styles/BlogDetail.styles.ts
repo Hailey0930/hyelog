@@ -103,6 +103,41 @@ export const Contents = styled.div`
   padding: 10px;
   border: 1px solid var(--white-color-500);
   border-radius: 5px;
+
+  h1 {
+    font-size: var(--font-size-200);
+    font-weight: 600;
+    margin: 10px 0;
+  }
+
+  h2 {
+    font-size: var(--font-size-400);
+    font-weight: 600;
+    margin: 10px 0;
+  }
+
+  h3 {
+    font-size: var(--font-size-500);
+    font-weight: 600;
+    margin: 10px 0;
+  }
+
+  h4 {
+    font-size: var(--font-size-600);
+    font-weight: 600;
+    margin: 10px 0;
+  }
+
+  p {
+    font-size: var(--font-size-600);
+    margin-bottom: 5px;
+  }
+
+  strong {
+    font-size: var(--font-size-600);
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
 `;
 
 export const ContentsHeaderContainer = styled.div<{ $isSidebarOpen: boolean }>`
@@ -134,7 +169,7 @@ export const ContentsHeader = styled.div<{
 }>`
   font-size: ${({ $level }) =>
     $level === 1
-      ? "var(--font-size-300)"
+      ? "var(--font-size-200)"
       : $level === 2
       ? "var(--font-size-400)"
       : $level === 3
