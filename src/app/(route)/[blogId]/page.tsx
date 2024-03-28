@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlog, IContentsHeaderList } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
-import DetailViewer from "@/app/_components/DetailViewer";
 import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
 import { exportContentsHeader } from "@/app/_utils/exportContentsHeader";
 import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
 import Loading from "@/app/_components/Loading";
+import DOMPurify from "isomorphic-dompurify";
 
 export default function BlogDetail({ params }: IParams) {
   const [blogDetail, setBlogDetail] = useState<IBlog>();
@@ -84,9 +84,11 @@ export default function BlogDetail({ params }: IParams) {
               />
             </S.Thumbnail>
           )}
-          <S.Contents>
-            <DetailViewer contents={blogDetail?.contents || ""} />
-          </S.Contents>
+          <S.Contents
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(blogDetail?.contents || ""),
+            }}
+          />
         </S.ThumbnailContentsContainer>
         {contentsHeaderList && (
           <S.ContentsHeaderContainer $isSidebarOpen={isSidebarOpen}>
