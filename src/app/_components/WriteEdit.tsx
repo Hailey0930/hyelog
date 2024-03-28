@@ -18,6 +18,8 @@ import Loading from "./Loading";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import { exportContentsImageSources } from "../_utils/exportContentsImageSrc";
+import hljs from "highlight.js";
+import "highlight.js/styles/panda-syntax-dark.css";
 
 export default function WriteEditComponent({ params }: IParams) {
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
@@ -192,6 +194,10 @@ export default function WriteEditComponent({ params }: IParams) {
     }
   };
 
+  hljs.configure({
+    languages: ["javascript", "ruby", "python", "java", "cpp", "kotlin", "sql"],
+  });
+
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -208,6 +214,9 @@ export default function WriteEditComponent({ params }: IParams) {
         handlers: {
           image: handleImagesChange,
         },
+      },
+      syntax: {
+        highlight: (text: string) => hljs.highlightAuto(text).value,
       },
     };
   }, []);

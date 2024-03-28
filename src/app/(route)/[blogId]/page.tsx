@@ -14,6 +14,7 @@ import { exportContentsHeader } from "@/app/_utils/exportContentsHeader";
 import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
 import Loading from "@/app/_components/Loading";
 import DOMPurify from "isomorphic-dompurify";
+import "highlight.js/styles/panda-syntax-dark.css";
 
 export default function BlogDetail({ params }: IParams) {
   const [blogDetail, setBlogDetail] = useState<IBlog>();
