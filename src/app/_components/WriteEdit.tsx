@@ -17,6 +17,7 @@ import { IBlog } from "../types/Blog.types";
 import Loading from "./Loading";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
+import { exportContentsImageSources } from "../_utils/exportContentsImageSrc";
 
 export default function WriteEditComponent({ params }: IParams) {
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
@@ -103,27 +104,17 @@ export default function WriteEditComponent({ params }: IParams) {
   const handleContentsChange = (value: string) => {
     setBlogContents(value);
 
-    if (!quillRef.current || !quillRef.current.getEditor()) return;
+    if (!quillRef.current) return;
 
-    const editor = quillRef.current?.getEditor();
-    const editorHtml = editor?.root.innerHTML;
+    const editorHtml = quillRef.current?.getEditor().root.innerHTML;
 
-    const imageSrcInEditor =
-      editorHtml.match(/<img.*?src="(.*?)"/g)?.map((imgTag) => {
-        const match = imgTag.match(/src="(.*?)"/);
-        return match ? match[1] : "";
-      }) || [];
-
-    const imageUrls = blogImages.map((image) => image.url);
-    const imagesRemoved = imageUrls.filter(
-      (url) => !imageSrcInEditor.includes(url)
+    const imagesInEditor = exportContentsImageSources(editorHtml);
+    const updatedBlogImages = blogImages.filter((image) =>
+      imagesInEditor.includes(image.url)
     );
 
-    if (imagesRemoved.length > 0) {
-      setBlogImages((current) =>
-        current.filter((image) => !imagesRemoved.includes(image.url))
-      );
-    }
+    if (updatedBlogImages.length !== blogImages.length)
+      setBlogImages(updatedBlogImages);
   };
 
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
