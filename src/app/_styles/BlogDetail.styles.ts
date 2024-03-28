@@ -138,6 +138,42 @@ export const Contents = styled.div`
     font-weight: 600;
     margin-bottom: 5px;
   }
+
+  pre {
+    background-color: var(--white-color-800);
+    border-radius: 5px;
+    color: var(--white-color-100);
+    padding: 10px 15px;
+    font-size: var(--font-size-600);
+    margin: 10px 0;
+  }
+
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+  }
+
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+  }
+
+  li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+    font-size: var(--font-size-600);
+    margin-bottom: 5px;
+  }
 `;
 
 export const ContentsHeaderContainer = styled.div<{ $isSidebarOpen: boolean }>`
