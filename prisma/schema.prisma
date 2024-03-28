@@ -19,18 +19,10 @@ model Blog {
   date           DateTime   @default(now()) @map(name: "date")
   categoryId     String     
   Category       Category   @relation(fields: [categoryId], references: [id])
-  images         Image[]
 }
 
 model Category {
   id            String   @default(cuid()) @id
   name          String
   blogs         Blog[]  
-}
-
-model Image {
-  id          String     @default(cuid())  @id
-  url         String
-  blogId      String
-  Blog        Blog       @relation(fields: [blogId], references: [id])
 }
