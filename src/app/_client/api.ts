@@ -1,3 +1,4 @@
+import { UploadApiResponse } from "cloudinary";
 import { IBlog } from "../types/Blog.types";
 import { ICategoryList } from "../types/Category.types";
 
@@ -46,4 +47,13 @@ export const blogDeleteAPI = (id: string) => {
   return fetch(`/api/blog/${id}`, {
     method: "DELETE",
   });
+};
+
+export const fileUploadAPI = async (data: FormData) => {
+  const fileUpload = await fetch("/api/fileUpload", {
+    method: "POST",
+    body: data,
+  });
+
+  return fileUpload.json();
 };

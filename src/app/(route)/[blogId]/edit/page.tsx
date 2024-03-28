@@ -1,7 +1,12 @@
 "use client";
-import WriteEditComponent from "@/app/_components/WriteEdit";
 import { IParams } from "@/app/types/params.types";
+import dynamic from "next/dynamic";
 
 export default function Edit({ params }: IParams) {
-  return <WriteEditComponent params={params} />;
+  const NoSSREditComponent = dynamic(
+    () => import("../../../_components/WriteEdit"),
+    { ssr: false }
+  );
+
+  return <NoSSREditComponent params={params} />;
 }

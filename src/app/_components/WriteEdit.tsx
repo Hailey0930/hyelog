@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import * as S from "../_styles/Write.styles";
 import { IWriteCategoryList } from "../types/WriteEditor.types";
 import {
@@ -8,18 +8,15 @@ import {
   blogWriteAPI,
   categoryListAPI,
   categoryWriteAPI,
+  fileUploadAPI,
 } from "../_client/api";
-import { breakPoints } from "../_styles/breakPoints";
 import { useRouter } from "next/navigation";
 import { IParams } from "../types/params.types";
 import useApiLoadingControl from "../_utils/useApiLoadingControl";
 import { IBlog } from "../types/Blog.types";
 import Loading from "./Loading";
-// import { fileUpload } from "../_utils/fileUpload";
 import "react-quill/dist/quill.snow.css";
-import dynamic from "next/dynamic";
-
-const NoSSRQuill = dynamic(() => import("react-quill"), { ssr: false });
+import ReactQuill from "react-quill";
 
 export default function WriteEditComponent({ params }: IParams) {
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
@@ -30,19 +27,13 @@ export default function WriteEditComponent({ params }: IParams) {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogThumbnail, setBlogThumbnail] = useState<File | null>(null);
   const [blogContents, setBlogContents] = useState("");
+  const [blogImages, setBlogImages] = useState<{ id: string; url: string }[]>(
+    []
+  );
+
+  const quillRef = useRef<ReactQuill>(null);
 
   const router = useRouter();
-
-  const toolbar = [
-    [{ header: [1, 2, 3, 4, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image"],
-    [{ align: [] }],
-    [{ color: [] }],
-    ["code-block"],
-    ["clean"],
-  ];
 
   const { isLoading: isDetailLoading, callApi: callDetailApi } =
     useApiLoadingControl<IBlog>();
@@ -111,6 +102,28 @@ export default function WriteEditComponent({ params }: IParams) {
 
   const handleContentsChange = (value: string) => {
     setBlogContents(value);
+
+    if (!quillRef.current || !quillRef.current.getEditor()) return;
+
+    const editor = quillRef.current?.getEditor();
+    const editorHtml = editor?.root.innerHTML;
+
+    const imageSrcInEditor =
+      editorHtml.match(/<img.*?src="(.*?)"/g)?.map((imgTag) => {
+        const match = imgTag.match(/src="(.*?)"/);
+        return match ? match[1] : "";
+      }) || [];
+
+    const imageUrls = blogImages.map((image) => image.url);
+    const imagesRemoved = imageUrls.filter(
+      (url) => !imageSrcInEditor.includes(url)
+    );
+
+    if (imagesRemoved.length > 0) {
+      setBlogImages((current) =>
+        current.filter((image) => !imagesRemoved.includes(image.url))
+      );
+    }
   };
 
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -119,22 +132,33 @@ export default function WriteEditComponent({ params }: IParams) {
     }
   };
 
-  // const handleImagesChange = async (
-  //   blob: Blob | File,
-  //   callback: (url: string, alt?: string) => void
-  // ) => {
-  //   const formData = new FormData();
-  //   formData.append("image", blob);
+  const handleImagesChange = async () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
 
-  //   const image = formData.get("image") as File;
-  //   const imageUrl = await fileUpload(image);
+    input.onchange = async () => {
+      const file = input.files ? input.files[0] : "";
+      const formData = new FormData();
+      formData.append("image", file);
 
-  //   try {
-  //     callback(imageUrl?.secure_url || "", imageUrl?.public_id);
-  //   } catch (error) {
-  //     console.error("Image upload failed:", error);
-  //   }
-  // };
+      const response = await fileUploadAPI(formData);
+
+      if (response) {
+        const editor = quillRef.current?.getEditor();
+        const range = editor?.getSelection();
+
+        if (range)
+          editor?.insertEmbed(range?.index, "image", response.file.secure_url);
+
+        setBlogImages((prev) => [
+          ...prev,
+          { id: response.file.public_id, url: response.file.secure_url },
+        ]);
+      }
+    };
+  };
 
   const handleWriteBlog = async () => {
     const createBlog = async (categoryId: string) => {
@@ -177,6 +201,26 @@ export default function WriteEditComponent({ params }: IParams) {
     }
   };
 
+  const modules = useMemo(() => {
+    return {
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, 4, false] }],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          [{ align: [] }],
+          [{ color: [] }],
+          ["code-block"],
+          ["clean"],
+        ],
+        handlers: {
+          image: handleImagesChange,
+        },
+      },
+    };
+  }, []);
+
   return (
     <S.Container>
       {(isDetailLoading ||
@@ -211,11 +255,12 @@ export default function WriteEditComponent({ params }: IParams) {
         </S.ThumbnailContainer>
       </S.ThumbnailCategoryContainer>
       <S.EditorContainer>
-        <NoSSRQuill
+        <ReactQuill
           theme="snow"
+          ref={quillRef}
           value={blogContents}
           style={{ height: "95%" }}
-          modules={{ toolbar: toolbar }}
+          modules={modules}
           onChange={handleContentsChange}
         />
       </S.EditorContainer>
