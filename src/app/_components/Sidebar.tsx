@@ -10,6 +10,8 @@ import {
   icon_linkedin,
   profile,
 } from "../../../public/sidebar/sidebarImage";
+import loginIcon from "../../../public/icon_login.png";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const linkArray = [
@@ -28,8 +30,14 @@ export default function Sidebar() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarState);
 
+  const router = useRouter();
+
   const handleSidebarOpen = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleMoveToLogin = () => {
+    router.push("/login");
   };
 
   return (
@@ -56,6 +64,11 @@ export default function Sidebar() {
           </S.LinkIconContainer>
         ))}
       </S.LinkContainer>
+      <S.LoginContainer>
+        <S.LoginButton onClick={handleMoveToLogin}>
+          <Image src={loginIcon} alt="로그인 버튼" />
+        </S.LoginButton>
+      </S.LoginContainer>
     </S.Container>
   );
 }
