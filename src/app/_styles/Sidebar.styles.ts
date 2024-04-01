@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { breakPoints } from "./breakPoints";
 
 export const Container = styled.aside<{ $isSidebarOpen: boolean }>`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,4 +81,19 @@ export const LinkIconContainer = styled(Link)`
 export const LinkIcon = styled(Image)`
   width: 100%;
   height: 100%;
+`;
+
+export const LoginContainer = styled.div`
+  position: absolute;
+  bottom: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 90%;
+  height: 40px;
+`;
+
+export const LoginButton = styled.button`
+  width: 20px;
+  height: 20px;
 `;

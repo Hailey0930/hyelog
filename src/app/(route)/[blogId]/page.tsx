@@ -15,12 +15,14 @@ import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
 import Loading from "@/app/_components/Loading";
 import DOMPurify from "isomorphic-dompurify";
 import "highlight.js/styles/panda-syntax-dark.css";
+import { loginState } from "@/app/_store/loginState";
 
 export default function BlogDetail({ params }: IParams) {
   const [blogDetail, setBlogDetail] = useState<IBlog>();
   const [contentsHeaderList, setContentsHeaderList] =
     useState<IContentsHeaderList[]>();
 
+  const login = useRecoilValue(loginState);
   const isSidebarOpen = useRecoilValue(sidebarState);
 
   const router = useRouter();
@@ -65,8 +67,12 @@ export default function BlogDetail({ params }: IParams) {
             <S.Date>{dayjs(blogDetail?.date).format("YYYY.MM.DD")}</S.Date>
             <S.EditDeleteContainer>
               <S.TextButton onClick={handleMoveToList}>목록으로</S.TextButton>
-              <S.TextButton onClick={handleMoveToEdit}>수정</S.TextButton>
-              <S.TextButton onClick={handleDeleteBlog}>삭제</S.TextButton>
+              {login && (
+                <>
+                  <S.TextButton onClick={handleMoveToEdit}>수정</S.TextButton>
+                  <S.TextButton onClick={handleDeleteBlog}>삭제</S.TextButton>
+                </>
+              )}
             </S.EditDeleteContainer>
           </S.DateEditContainer>
         </S.BlogInfoContainer>
