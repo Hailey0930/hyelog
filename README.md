@@ -9,12 +9,12 @@
 
 > hyelog repository입니다. <br />
 > 배포주소 : [https://hyelog-six.vercel.app/](https://hyelog-six.vercel.app/) <br />
-> 프론트엔드 : Next.js 14 app router
+> 프론트엔드 : Next.js 14 app router <br />
 > 백엔드 : Next.js 14 api route, prisma ORM, vercel Postgres, cloudinary
 
 ## 프로젝트 설명
 
-- 직접 개발한 개인 기술 블로그
+- Next.js 풀스택을 활용하여 개인 기술 블로그 개발
 
 ## 버전
 
