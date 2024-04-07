@@ -69,6 +69,17 @@ export const Title = styled.div`
   }
 `;
 
+export const CategoryDateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+`;
+
+export const Category = styled.div`
+  font-size: var(--font-size-600);
+`;
+
 export const Date = styled.div`
   font-size: var(--font-size-600);
   color: var(--white-color-700);

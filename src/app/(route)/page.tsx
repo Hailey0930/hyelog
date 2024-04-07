@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as S from "../_styles/Blog.styles";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlog } from "../types/Blog.types";
+import { IBlog, IBlogWithCategory } from "../types/Blog.types";
 import dayjs from "dayjs";
 import NoImage from "../../../public/icon_noImage.png";
 import useApiLoadingControl from "../_utils/useApiLoadingControl";
@@ -11,11 +11,11 @@ import Loading from "../_components/Loading";
 import { api } from "../_client/api";
 
 export default function Blog() {
-  const [blogList, setBlogList] = useState<IBlog[]>([]);
+  const [blogList, setBlogList] = useState<IBlogWithCategory[]>([]);
 
   const router = useRouter();
 
-  const { isLoading, callApi } = useApiLoadingControl<IBlog[]>();
+  const { isLoading, callApi } = useApiLoadingControl<IBlogWithCategory[]>();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -47,7 +47,10 @@ export default function Blog() {
           </S.ThumbnailContainer>
           <S.ContentContainer>
             <S.Title>{blog.title}</S.Title>
-            <S.Date>{dayjs(blog.date).format("YYYY.MM.DD")}</S.Date>
+            <S.CategoryDateContainer>
+              <S.Category>[ {blog.Category.name} ]</S.Category>
+              <S.Date>{dayjs(blog.date).format("YYYY.MM.DD")}</S.Date>
+            </S.CategoryDateContainer>
           </S.ContentContainer>
         </S.BlogContainer>
       ))}

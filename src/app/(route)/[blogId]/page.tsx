@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlog, IContentsHeaderList } from "@/app/types/Blog.types";
+import { IBlogWithCategory, IContentsHeaderList } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
@@ -18,7 +18,7 @@ import { getCookie } from "@/app/_utils/cookie";
 import { api } from "@/app/_client/api";
 
 export default function BlogDetail({ params }: IParams) {
-  const [blogDetail, setBlogDetail] = useState<IBlog>();
+  const [blogDetail, setBlogDetail] = useState<IBlogWithCategory>();
   const [contentsHeaderList, setContentsHeaderList] =
     useState<IContentsHeaderList[]>();
 
@@ -27,7 +27,7 @@ export default function BlogDetail({ params }: IParams) {
 
   const router = useRouter();
 
-  const { isLoading, callApi } = useApiLoadingControl<IBlog>();
+  const { isLoading, callApi } = useApiLoadingControl<IBlogWithCategory>();
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -63,6 +63,7 @@ export default function BlogDetail({ params }: IParams) {
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
         <S.BlogInfoContainer>
           <S.BlogTitle>{blogDetail?.title}</S.BlogTitle>
+          <S.BlogCategory>[ {blogDetail?.Category.name} ]</S.BlogCategory>
           <S.DateEditContainer>
             <S.Date>{dayjs(blogDetail?.date).format("YYYY.MM.DD")}</S.Date>
             <S.EditDeleteContainer>
