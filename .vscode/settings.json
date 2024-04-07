@@ -12,6 +12,7 @@
     "_font": "Font",
     "_client": "Client",
     "_test": "Test",
-    "(route)": "Routes"
+    "(route)": "Routes",
+    "_repositories": "Prisma"
   }
 }

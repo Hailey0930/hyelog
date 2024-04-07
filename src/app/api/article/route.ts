@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../_lib/prisma";
 import { fileUpload } from "@/app/_utils/fileUpload";
+import { blogRepository } from "@/app/_repositories/blogRepository";
+import { categoryRepository } from "@/app/_repositories/categoryRepository";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -13,9 +14,7 @@ export async function POST(request: NextRequest) {
   let finalCategoryId = categoryId;
 
   if (newCategory) {
-    const category = await prisma.category.create({
-      data: { name: newCategory },
-    });
+    const category = await categoryRepository.createCategory(newCategory);
 
     finalCategoryId = category.id;
   }
@@ -27,15 +26,12 @@ export async function POST(request: NextRequest) {
 
   const thumbnailUrl = await fileUpload(thumbnail);
 
-  const result = await prisma.blog.create({
-    data: {
-      title,
-      contents,
-      categoryId: finalCategoryId,
-      thumbnailUrl: thumbnailUrl?.secure_url,
-      thumbnailId: thumbnailUrl?.public_id,
-    },
-  });
+  const result = await blogRepository.createBlog(
+    title,
+    contents,
+    finalCategoryId,
+    thumbnailUrl
+  );
 
   return NextResponse.json({
     message: "작성 성공",
