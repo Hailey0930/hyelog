@@ -6,9 +6,9 @@ import downArrow from "../../../../public/icon_down-arrow.png";
 import { useRouter } from "next/navigation";
 import { ICategoryList, IOpenCategories } from "@/app/types/Category.types";
 import dayjs from "dayjs";
-import { categoryListAPI } from "@/app/_client/api";
 import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
 import Loading from "@/app/_components/Loading";
+import { api } from "@/app/_client/api";
 
 export default function Category() {
   const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
@@ -20,7 +20,7 @@ export default function Category() {
 
   useEffect(() => {
     const fetchCategoryList = async () => {
-      const categoryList = await callApi(categoryListAPI);
+      const categoryList = await callApi(api.getCategoryList);
       setCategoryList(categoryList);
     };
     fetchCategoryList();

@@ -2,14 +2,6 @@
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import * as S from "../_styles/Write.styles";
 import { IWriteCategoryList } from "../types/WriteEditor.types";
-import {
-  blogDetailAPI,
-  blogEditAPI,
-  blogWriteAPI,
-  categoryListAPI,
-  categoryWriteAPI,
-  fileUploadAPI,
-} from "../_client/api";
 import { useRouter } from "next/navigation";
 import { IParams } from "../types/params.types";
 import useApiLoadingControl from "../_utils/useApiLoadingControl";
@@ -20,6 +12,7 @@ import ReactQuill from "react-quill";
 import { exportContentsImageSources } from "../_utils/exportContentsImageSrc";
 import hljs from "highlight.js";
 import "highlight.js/styles/panda-syntax-dark.css";
+import { api } from "../_client/api";
 
 export default function WriteEditComponent({ params }: IParams) {
   const [categoryList, setCategoryList] = useState<IWriteCategoryList[]>([]);
@@ -50,7 +43,7 @@ export default function WriteEditComponent({ params }: IParams) {
   useEffect(() => {
     if (params && params.blogId) {
       const fetchBlog = async () => {
-        const blog = await callDetailApi(blogDetailAPI, params.blogId);
+        const blog = await callDetailApi(api.getArticle, params.blogId);
         setBlogTitle(blog.title);
         setBlogContents(blog.contents);
         setBlogDetail(blog);
@@ -61,7 +54,7 @@ export default function WriteEditComponent({ params }: IParams) {
 
   useEffect(() => {
     const fetchAndSetCategoryList = async () => {
-      const data = await callCategoryListApi(categoryListAPI);
+      const data = await callCategoryListApi(api.getCategoryList);
 
       const categoryListWithNew = data.map((el) => ({
         id: el.id,
@@ -136,7 +129,7 @@ export default function WriteEditComponent({ params }: IParams) {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await fileUploadAPI(formData);
+      const response = await api.uploadFile(formData);
 
       if (response) {
         const editor = quillRef.current?.getEditor();
@@ -163,8 +156,8 @@ export default function WriteEditComponent({ params }: IParams) {
       if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
 
       const blogResponse = params?.blogId
-        ? await callWriteApi(() => blogEditAPI(params.blogId, formData))
-        : await callWriteApi(() => blogWriteAPI(formData));
+        ? await callWriteApi(() => api.editArticle(params.blogId, formData))
+        : await callWriteApi(() => api.writeArticle(formData));
 
       if (blogResponse.ok) {
         console.log("블로그 등록 성공");
@@ -179,7 +172,7 @@ export default function WriteEditComponent({ params }: IParams) {
     // NOTE 신규 카테고리
     if (selectedCategory === "custom" && newCategory) {
       const categoryResponse = await callCategoryWriteApi(
-        categoryWriteAPI,
+        api.writeArticle,
         newCategory
       );
 

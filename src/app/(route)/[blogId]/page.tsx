@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlog, IContentsHeaderList } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
-import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
 import { exportContentsHeader } from "@/app/_utils/exportContentsHeader";
@@ -16,6 +15,7 @@ import Loading from "@/app/_components/Loading";
 import DOMPurify from "isomorphic-dompurify";
 import "highlight.js/styles/panda-syntax-dark.css";
 import { getCookie } from "@/app/_utils/cookie";
+import { api } from "@/app/_client/api";
 
 export default function BlogDetail({ params }: IParams) {
   const [blogDetail, setBlogDetail] = useState<IBlog>();
@@ -31,7 +31,7 @@ export default function BlogDetail({ params }: IParams) {
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const blog = await callApi(blogDetailAPI, params.blogId);
+      const blog = await callApi(api.getArticle, params.blogId);
       setBlogDetail(blog);
     };
     fetchBlog();
@@ -50,7 +50,7 @@ export default function BlogDetail({ params }: IParams) {
   };
 
   const handleDeleteBlog = () => {
-    const deleteBlog = blogDeleteAPI(params.blogId);
+    const deleteBlog = api.deleteArticle(params.blogId);
 
     deleteBlog.then((data) =>
       data.status === 200 ? router.push("/") : alert("삭제 실패")

@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IBlog } from "../types/Blog.types";
 import dayjs from "dayjs";
-import { blogListAPI } from "@/app/_client/api";
 import NoImage from "../../../public/icon_noImage.png";
 import useApiLoadingControl from "../_utils/useApiLoadingControl";
 import Loading from "../_components/Loading";
+import { api } from "../_client/api";
 
 export default function Blog() {
   const [blogList, setBlogList] = useState<IBlog[]>([]);
@@ -19,7 +19,7 @@ export default function Blog() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const blogs = await callApi(blogListAPI);
+      const blogs = await callApi(api.getArticleList);
       setBlogList(blogs);
     };
     fetchBlogs();
