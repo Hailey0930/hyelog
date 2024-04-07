@@ -1,7 +1,7 @@
-import { IBlog } from "../types/Blog.types";
+import { IBlogWithCategory } from "../types/Blog.types";
 import { ICategoryList } from "../types/Category.types";
 
-const getArticleList = async (): Promise<IBlog[]> => {
+const getArticleList = async (): Promise<IBlogWithCategory[]> => {
   const response = await fetch("/api/articleList");
   return response.json();
 };

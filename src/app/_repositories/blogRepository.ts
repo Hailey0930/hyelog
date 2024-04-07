@@ -1,18 +1,33 @@
 import prisma from "../../_lib/prisma";
-import { IBlog } from "../types/Blog.types";
+import { IBlog, IBlogWithCategory } from "../types/Blog.types";
 import { UploadApiResponse } from "cloudinary";
 
-const findAllBlogs = async (): Promise<IBlog[]> => {
+const findAllBlogs = async (): Promise<IBlogWithCategory[]> => {
   return prisma.blog.findMany({
     include: {
-      Category: true,
+      Category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 };
 
-const findOneBlog = async (blogId: string): Promise<IBlog | null> => {
+const findOneBlog = async (
+  blogId: string
+): Promise<IBlogWithCategory | null> => {
   return prisma.blog.findUnique({
     where: { id: blogId },
+    include: {
+      Category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
   });
 };
 

@@ -8,6 +8,13 @@ export interface IBlog {
   categoryId: string;
 }
 
+export interface IBlogWithCategory extends IBlog {
+  Category: {
+    id: string;
+    name: string;
+  };
+}
+
 export type IBlogParams = {
   params: { blogId: string };
 };
