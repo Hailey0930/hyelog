@@ -147,43 +147,29 @@ export default function WriteEditComponent({ params }: IParams) {
   };
 
   const handleWriteBlog = async () => {
-    const createBlog = async (categoryId: string) => {
-      const formData = new FormData();
-      formData.append("title", blogTitle);
-      formData.append("contents", blogContents);
-      formData.append("categoryId", categoryId);
+    const formData = new FormData();
+    formData.append("title", blogTitle);
+    formData.append("contents", blogContents);
 
-      if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
-
-      const blogResponse = params?.blogId
-        ? await callWriteApi(() => api.editArticle(params.blogId, formData))
-        : await callWriteApi(() => api.writeArticle(formData));
-
-      if (blogResponse.ok) {
-        console.log("블로그 등록 성공");
-
-        const blogResult = await blogResponse.json();
-        router.push(`/${blogResult.blogId}`);
-      } else {
-        console.log("블로그 등록 실패");
-      }
-    };
-
-    // NOTE 신규 카테고리
-    if (selectedCategory === "custom" && newCategory) {
-      const categoryResponse = await callCategoryWriteApi(
-        api.writeArticle,
-        newCategory
-      );
-
-      if (categoryResponse.ok) {
-        const categoryData = await categoryResponse.json();
-        createBlog(categoryData.categoryId);
-      }
+    if (selectedCategory !== "custom") {
+      formData.append("categoryId", selectedCategory);
+    } else {
+      formData.append("newCategory", newCategory);
     }
-    // NOTE 기존 카테고리
-    else {
-      createBlog(selectedCategory);
+
+    if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
+
+    const blogResponse = params?.blogId
+      ? await callWriteApi(() => api.editArticle(params.blogId, formData))
+      : await callWriteApi(() => api.writeArticle(formData));
+
+    if (blogResponse.ok) {
+      console.log("블로그 등록 성공");
+
+      const blogResult = await blogResponse.json();
+      router.push(`/${blogResult.blogId}`);
+    } else {
+      console.log("블로그 등록 실패");
     }
   };
 

@@ -62,6 +62,11 @@ export async function PUT(request: NextRequest, { params }: IBlogParams) {
     const categoryId = formData.get("categoryId")?.toString() || "";
     const thumbnail = formData.get("thumbnail") as File;
 
+    const currentBlog = await prisma.blog.findUnique({
+      where: { id: blogId },
+    });
+    const oldCategoryId = currentBlog?.categoryId;
+
     const thumbnailUrl = await fileUpload(thumbnail);
 
     const result = await prisma.blog.update({
@@ -74,6 +79,11 @@ export async function PUT(request: NextRequest, { params }: IBlogParams) {
         thumbnailId: thumbnailUrl?.public_id,
       },
     });
+
+    // 카테고리 수정 후 이전 카테고리에 속한 블로그 글이 없는 경우 카테고리 삭제
+    if (oldCategoryId && categoryId !== oldCategoryId) {
+      await deleteEmptyCategory(oldCategoryId);
+    }
 
     return NextResponse.json({
       message: "수정 성공",

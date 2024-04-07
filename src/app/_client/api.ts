@@ -40,14 +40,6 @@ const getCategoryList = async (): Promise<ICategoryList[]> => {
   return response.json();
 };
 
-const writeCategory = async (...args: (string | FormData)[]) => {
-  const name = args[0];
-  return fetch("/api/category", {
-    method: "POST",
-    body: JSON.stringify({ name }),
-  });
-};
-
 const uploadFile = async (data: FormData) => {
   const fileUpload = await fetch("/api/fileUpload", {
     method: "POST",
@@ -64,6 +56,5 @@ export const api = {
   editArticle,
   deleteArticle,
   getCategoryList,
-  writeCategory,
   uploadFile,
 };
