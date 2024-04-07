@@ -15,14 +15,14 @@ import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
 import Loading from "@/app/_components/Loading";
 import DOMPurify from "isomorphic-dompurify";
 import "highlight.js/styles/panda-syntax-dark.css";
-import { loginState } from "@/app/_store/loginState";
+import { getCookie } from "@/app/_utils/cookie";
 
 export default function BlogDetail({ params }: IParams) {
   const [blogDetail, setBlogDetail] = useState<IBlog>();
   const [contentsHeaderList, setContentsHeaderList] =
     useState<IContentsHeaderList[]>();
 
-  const login = useRecoilValue(loginState);
+  const login = getCookie("login");
   const isSidebarOpen = useRecoilValue(sidebarState);
 
   const router = useRouter();

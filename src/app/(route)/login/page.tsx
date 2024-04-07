@@ -1,9 +1,8 @@
 "use client";
 import { ChangeEvent, useEffect, useState } from "react";
 import * as S from "../../_styles/Login.styles";
-import { useSetRecoilState } from "recoil";
-import { loginState } from "@/app/_store/loginState";
 import { useRouter } from "next/navigation";
+import { getCookie, setCookie } from "@/app/_utils/cookie";
 
 export default function Login() {
   const BLOG_ID = process.env.NEXT_PUBLIC_BLOG_ID;
@@ -11,9 +10,16 @@ export default function Login() {
 
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
-  const setLogin = useSetRecoilState(loginState);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const login = getCookie("login");
+
+    if (login) {
+      router.push("/");
+    }
+  }, [router]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -26,7 +32,7 @@ export default function Login() {
     if (BLOG_ID !== id || BLOG_PW !== pw) {
       window.alert("로그인 실패");
     } else {
-      setLogin(true);
+      setCookie("login", "true", 1);
       router.push("/");
     }
   };
