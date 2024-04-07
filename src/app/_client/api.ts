@@ -1,59 +1,60 @@
-import { UploadApiResponse } from "cloudinary";
-import { IBlog } from "../types/Blog.types";
+import { IBlogWithCategory } from "../types/Blog.types";
 import { ICategoryList } from "../types/Category.types";
 
-export const blogListAPI = async (): Promise<IBlog[]> => {
-  const response = await fetch("/api/blogList");
+const getArticleList = async (): Promise<IBlogWithCategory[]> => {
+  const response = await fetch("/api/articleList");
   return response.json();
 };
 
-export const categoryListAPI = async (): Promise<ICategoryList[]> => {
-  const response = await fetch("/api/category");
-  return response.json();
-};
-
-export const categoryWriteAPI = async (...args: (string | FormData)[]) => {
-  const name = args[0];
-  return fetch("/api/category", {
-    method: "POST",
-    body: JSON.stringify({ name }),
-  });
-};
-
-export const blogDetailAPI = async (...args: (string | FormData)[]) => {
+const getArticle = async (...args: (string | FormData)[]) => {
   const id = args[0];
-  const response = await fetch(`/api/blog/${id}`);
+  const response = await fetch(`/api/article/${id}`);
   return response.json();
 };
 
-export const blogWriteAPI = async (
+const writeArticle = async (
   ...args: (string | FormData)[]
 ): Promise<Response> => {
   const data = args[0];
-  return fetch("/api/write", {
+  return fetch("/api/article", {
     method: "POST",
     body: data,
   });
 };
 
-export const blogEditAPI = (id: string, data: FormData) => {
-  return fetch(`/api/blog/${id}`, {
+const editArticle = (id: string, data: FormData) => {
+  return fetch(`/api/article/${id}`, {
     method: "PUT",
     body: data,
   });
 };
 
-export const blogDeleteAPI = (id: string) => {
-  return fetch(`/api/blog/${id}`, {
+const deleteArticle = (id: string) => {
+  return fetch(`/api/article/${id}`, {
     method: "DELETE",
   });
 };
 
-export const fileUploadAPI = async (data: FormData) => {
+const getCategoryList = async (): Promise<ICategoryList[]> => {
+  const response = await fetch("/api/category");
+  return response.json();
+};
+
+const uploadFile = async (data: FormData) => {
   const fileUpload = await fetch("/api/fileUpload", {
     method: "POST",
     body: data,
   });
 
   return fileUpload.json();
+};
+
+export const api = {
+  getArticleList,
+  getArticle,
+  writeArticle,
+  editArticle,
+  deleteArticle,
+  getCategoryList,
+  uploadFile,
 };

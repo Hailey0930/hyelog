@@ -1,17 +1,10 @@
-import prisma from "../../_lib/prisma";
+import { blogRepository } from "../_repositories/blogRepository";
+import { categoryRepository } from "../_repositories/categoryRepository";
 
 export const deleteEmptyCategory = async (categoryId: string) => {
-  const count = await prisma.blog.count({
-    where: {
-      categoryId,
-    },
-  });
+  const count = await blogRepository.countBlogsByCategory(categoryId);
 
   if (count === 0) {
-    await prisma.category.delete({
-      where: {
-        id: categoryId,
-      },
-    });
+    await categoryRepository.deleteCategory(categoryId);
   }
 };

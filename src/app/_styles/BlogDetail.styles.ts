@@ -30,8 +30,12 @@ export const BlogInfoContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  height: 130px;
-  gap: 50px;
+  height: 150px;
+  gap: 30px;
+`;
+
+export const BlogCategory = styled.div`
+  font-size: var(--font-size-600);
 `;
 
 export const BlogTitle = styled.div`

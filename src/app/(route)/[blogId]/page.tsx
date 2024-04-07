@@ -5,9 +5,8 @@ import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlog, IContentsHeaderList } from "@/app/types/Blog.types";
+import { IBlogWithCategory, IContentsHeaderList } from "@/app/types/Blog.types";
 import dayjs from "dayjs";
-import { blogDeleteAPI, blogDetailAPI } from "@/app/_client/api";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
 import { exportContentsHeader } from "@/app/_utils/exportContentsHeader";
@@ -15,23 +14,24 @@ import useApiLoadingControl from "@/app/_utils/useApiLoadingControl";
 import Loading from "@/app/_components/Loading";
 import DOMPurify from "isomorphic-dompurify";
 import "highlight.js/styles/panda-syntax-dark.css";
-import { loginState } from "@/app/_store/loginState";
+import { getCookie } from "@/app/_utils/cookie";
+import { api } from "@/app/_client/api";
 
 export default function BlogDetail({ params }: IParams) {
-  const [blogDetail, setBlogDetail] = useState<IBlog>();
+  const [blogDetail, setBlogDetail] = useState<IBlogWithCategory>();
   const [contentsHeaderList, setContentsHeaderList] =
     useState<IContentsHeaderList[]>();
 
-  const login = useRecoilValue(loginState);
+  const login = getCookie("login");
   const isSidebarOpen = useRecoilValue(sidebarState);
 
   const router = useRouter();
 
-  const { isLoading, callApi } = useApiLoadingControl<IBlog>();
+  const { isLoading, callApi } = useApiLoadingControl<IBlogWithCategory>();
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const blog = await callApi(blogDetailAPI, params.blogId);
+      const blog = await callApi(api.getArticle, params.blogId);
       setBlogDetail(blog);
     };
     fetchBlog();
@@ -50,7 +50,7 @@ export default function BlogDetail({ params }: IParams) {
   };
 
   const handleDeleteBlog = () => {
-    const deleteBlog = blogDeleteAPI(params.blogId);
+    const deleteBlog = api.deleteArticle(params.blogId);
 
     deleteBlog.then((data) =>
       data.status === 200 ? router.push("/") : alert("삭제 실패")
@@ -63,6 +63,7 @@ export default function BlogDetail({ params }: IParams) {
       <S.BlogContainer $isSidebarOpen={isSidebarOpen}>
         <S.BlogInfoContainer>
           <S.BlogTitle>{blogDetail?.title}</S.BlogTitle>
+          <S.BlogCategory>[ {blogDetail?.Category.name} ]</S.BlogCategory>
           <S.DateEditContainer>
             <S.Date>{dayjs(blogDetail?.date).format("YYYY.MM.DD")}</S.Date>
             <S.EditDeleteContainer>

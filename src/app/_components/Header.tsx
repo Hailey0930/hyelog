@@ -11,7 +11,6 @@ export default function Header() {
   const menuArray = [
     { name: "Blog", path: "/" },
     { name: "Category", path: "/category" },
-    { name: "About", path: "/about" },
   ];
 
   const [currentPath, setCurrentPath] = useState("/");
