@@ -1,28 +1,27 @@
-// schema.prisma
-
+// 마이그레이션 찾아보기
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model Blog {
-  id             String     @default(cuid()) @id
-  title          String
-  contents       String
-  thumbnailUrl   String?
-  thumbnailId    String?
-  date           DateTime   @default(now()) @map(name: "date")
-  categoryId     String     
-  Category       Category   @relation(fields: [categoryId], references: [id])
+model Article {
+  id           String   @id(map: "Blog_pkey")
+  title        String
+  contents     String
+  date         DateTime @default(now())
+  categoryId   String
+  thumbnailId  String?
+  thumbnailUrl String?
+  Category     Category @relation(fields: [categoryId], references: [id], map: "Blog_categoryId_fkey")
 }
 
 model Category {
-  id            String   @default(cuid()) @id
-  name          String
-  blogs         Blog[]  
+  id      String    @id
+  name    String
+  Article Article[]
 }
