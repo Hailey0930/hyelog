@@ -5,7 +5,10 @@ import { useRecoilValue } from "recoil";
 import { sidebarState } from "@/app/_store/sidebarState";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlogWithCategory, IContentsHeaderList } from "@/app/types/Blog.types";
+import {
+  IArticleWithCategory,
+  IContentsHeaderList,
+} from "@/app/types/Article.types";
 import dayjs from "dayjs";
 import { IParams } from "@/app/types/params.types";
 import NoImage from "../../../../public/icon_noImage.png";
@@ -18,7 +21,7 @@ import { getCookie } from "@/app/_utils/cookie";
 import { api } from "@/app/_client/api";
 
 export default function BlogDetail({ params }: IParams) {
-  const [blogDetail, setBlogDetail] = useState<IBlogWithCategory>();
+  const [blogDetail, setBlogDetail] = useState<IArticleWithCategory>();
   const [contentsHeaderList, setContentsHeaderList] =
     useState<IContentsHeaderList[]>();
 
@@ -27,11 +30,11 @@ export default function BlogDetail({ params }: IParams) {
 
   const router = useRouter();
 
-  const { isLoading, callApi } = useApiLoadingControl<IBlogWithCategory>();
+  const { isLoading, callApi } = useApiLoadingControl<IArticleWithCategory>();
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const blog = await callApi(api.getArticle, params.blogId);
+      const blog = await callApi(api.getArticle, params.articleId);
       setBlogDetail(blog);
     };
     fetchBlog();
@@ -46,11 +49,11 @@ export default function BlogDetail({ params }: IParams) {
   };
 
   const handleMoveToEdit = () => {
-    router.push(`${params.blogId}/edit`);
+    router.push(`${params.articleId}/edit`);
   };
 
   const handleDeleteBlog = () => {
-    const deleteBlog = api.deleteArticle(params.blogId);
+    const deleteBlog = api.deleteArticle(params.articleId);
 
     deleteBlog.then((data) =>
       data.status === 200 ? router.push("/") : alert("삭제 실패")

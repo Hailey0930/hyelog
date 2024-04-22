@@ -1,6 +1,6 @@
 import { categoryRepository } from "@/app/_repositories/categoryRepository";
 import { ICategoryList } from "@/app/types/Category.types";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(): Promise<
   NextResponse<ICategoryList[]> | undefined

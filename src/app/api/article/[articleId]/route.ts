@@ -1,35 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
-import { IBlog, IBlogParams } from "@/app/types/Blog.types";
+import { IArticle, IArticleParams } from "@/app/types/Article.types";
 import { deleteEmptyCategory } from "@/app/_utils/deleteEmptyCategory";
 import { deleteFile } from "@/app/_utils/fileDelete";
 import { fileUpload } from "@/app/_utils/fileUpload";
-import { blogRepository } from "@/app/_repositories/blogRepository";
+import { articleRepository } from "@/app/_repositories/articleRepository";
 
 export async function GET(
   request: NextRequest,
-  { params }: IBlogParams
-): Promise<NextResponse<IBlog | null> | undefined> {
+  { params }: IArticleParams
+): Promise<NextResponse<IArticle | null> | undefined> {
   try {
-    const blogId = params.blogId || "";
+    const articleId = params.articleId || "";
 
-    const blog = await blogRepository.findOneBlog(blogId);
+    const article = await articleRepository.findOneArticle(articleId);
 
-    return NextResponse.json(blog);
+    return NextResponse.json(article);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: IBlogParams) {
+export async function DELETE(request: NextRequest, { params }: IArticleParams) {
   try {
-    const blogId = params.blogId || "";
+    const articleId = params.articleId || "";
 
-    const blog = await blogRepository.findOneBlog(blogId);
+    const article = await articleRepository.findOneArticle(articleId);
 
-    const categoryId = blog?.categoryId;
-    const thumbnailPublicId = blog?.thumbnailId;
+    const categoryId = article?.categoryId;
+    const thumbnailPublicId = article?.thumbnailId;
 
-    await blogRepository.deleteBlog(blogId);
+    await articleRepository.deleteArticle(articleId);
 
     // 블로그 삭제 시 해당 썸네일도 삭제
     if (thumbnailPublicId) await deleteFile(thumbnailPublicId);
@@ -45,9 +45,9 @@ export async function DELETE(request: NextRequest, { params }: IBlogParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: IBlogParams) {
+export async function PUT(request: NextRequest, { params }: IArticleParams) {
   try {
-    const blogId = params.blogId || "";
+    const articleId = params.articleId || "";
 
     const formData = await request.formData();
 
@@ -56,13 +56,13 @@ export async function PUT(request: NextRequest, { params }: IBlogParams) {
     const categoryId = formData.get("categoryId")?.toString() || "";
     const thumbnail = formData.get("thumbnail") as File;
 
-    const currentBlog = await blogRepository.findOneBlog(blogId);
-    const oldCategoryId = currentBlog?.categoryId;
+    const currentArticle = await articleRepository.findOneArticle(articleId);
+    const oldCategoryId = currentArticle?.categoryId;
 
     const thumbnailUrl = await fileUpload(thumbnail);
 
-    const result = await blogRepository.updateBlog(
-      blogId,
+    const result = await articleRepository.updateArticle(
+      articleId,
       title,
       contents,
       categoryId,
@@ -76,7 +76,7 @@ export async function PUT(request: NextRequest, { params }: IBlogParams) {
 
     return NextResponse.json({
       message: "수정 성공",
-      blogId: result.id,
+      articleId: result.id,
       status: 200,
     });
   } catch (error) {
