@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fileUpload } from "@/app/_utils/fileUpload";
-import { blogRepository } from "@/app/_repositories/blogRepository";
+import { articleRepository } from "@/app/_repositories/articleRepository";
 import { categoryRepository } from "@/app/_repositories/categoryRepository";
 
 export async function POST(request: NextRequest) {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
   const thumbnailUrl = await fileUpload(thumbnail);
 
-  const result = await blogRepository.createBlog(
+  const result = await articleRepository.createArticle(
     title,
     contents,
     finalCategoryId,
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     message: "작성 성공",
-    blogId: result.id,
+    articleId: result.id,
     status: 200,
   });
 }

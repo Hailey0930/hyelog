@@ -1,4 +1,3 @@
-// 마이그레이션 찾아보기
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +9,14 @@ datasource db {
 }
 
 model Article {
-  id           String   @id(map: "Blog_pkey")
+  id           String   @id @default(cuid())
   title        String
   contents     String
   date         DateTime @default(now())
   categoryId   String
   thumbnailId  String?
   thumbnailUrl String?
-  Category     Category @relation(fields: [categoryId], references: [id], map: "Blog_categoryId_fkey")
+  Category     Category @relation(fields: [categoryId], references: [id])
 }
 
 model Category {

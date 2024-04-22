@@ -1,4 +1,4 @@
-export interface IBlog {
+export interface IArticle {
   id: string;
   title: string;
   contents: string;
@@ -8,15 +8,15 @@ export interface IBlog {
   categoryId: string;
 }
 
-export interface IBlogWithCategory extends IBlog {
+export interface IArticleWithCategory extends IArticle {
   Category: {
     id: string;
     name: string;
   };
 }
 
-export type IBlogParams = {
-  params: { blogId: string };
+export type IArticleParams = {
+  params: { articleId: string };
 };
 
 export type IContentsHeaderList = {

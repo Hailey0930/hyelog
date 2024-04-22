@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as S from "../_styles/Blog.styles";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IBlog, IBlogWithCategory } from "../types/Blog.types";
+import { IArticleWithCategory } from "../types/Article.types";
 import dayjs from "dayjs";
 import NoImage from "../../../public/icon_noImage.png";
 import useApiLoadingControl from "../_utils/useApiLoadingControl";
@@ -11,11 +11,11 @@ import Loading from "../_components/Loading";
 import { api } from "../_client/api";
 
 export default function Blog() {
-  const [blogList, setBlogList] = useState<IBlogWithCategory[]>([]);
+  const [blogList, setBlogList] = useState<IArticleWithCategory[]>([]);
 
   const router = useRouter();
 
-  const { isLoading, callApi } = useApiLoadingControl<IBlogWithCategory[]>();
+  const { isLoading, callApi } = useApiLoadingControl<IArticleWithCategory[]>();
 
   useEffect(() => {
     const fetchBlogs = async () => {

@@ -1,4 +1,4 @@
-import { blogRepository } from "../_repositories/blogRepository";
+import { blogRepository } from "../_repositories/articleRepository";
 import { categoryRepository } from "../_repositories/categoryRepository";
 
 export const deleteEmptyCategory = async (categoryId: string) => {

@@ -1,3 +1,3 @@
 export type IParams = {
-  params: { blogId: string };
+  params: { articleId: string };
 };
