@@ -4,7 +4,7 @@ import { ICategoryList } from "../types/Category.types";
 const findAllCategories = async (): Promise<ICategoryList[]> => {
   return await prisma.category.findMany({
     include: {
-      blogs: true,
+      articles: true,
     },
   });
 };

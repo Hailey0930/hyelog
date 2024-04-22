@@ -16,7 +16,7 @@ export const Container = styled.div`
   }
 `;
 
-export const BlogContainer = styled.div`
+export const ArticleContainer = styled.div`
   display: flex;
   align-items: center;
   height: 250px;

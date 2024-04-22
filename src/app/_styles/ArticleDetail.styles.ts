@@ -11,7 +11,7 @@ export const Container = styled.div`
   }
 `;
 
-export const BlogContainer = styled.div<{ $isSidebarOpen: boolean }>`
+export const ArticleContainer = styled.div<{ $isSidebarOpen: boolean }>`
   display: flex;
   flex-direction: column;
   width: 75%;
@@ -25,7 +25,7 @@ export const BlogContainer = styled.div<{ $isSidebarOpen: boolean }>`
   }
 `;
 
-export const BlogInfoContainer = styled.div`
+export const ArticleInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,11 +34,11 @@ export const BlogInfoContainer = styled.div`
   gap: 30px;
 `;
 
-export const BlogCategory = styled.div`
+export const ArticleCategory = styled.div`
   font-size: var(--font-size-600);
 `;
 
-export const BlogTitle = styled.div`
+export const ArticleTitle = styled.div`
   font-size: 3.4rem;
   font-weight: 700;
 `;

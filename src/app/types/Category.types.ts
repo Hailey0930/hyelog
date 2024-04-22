@@ -3,7 +3,7 @@ import { IArticle } from "./Article.types";
 export interface ICategoryList {
   id: string;
   name: string;
-  blogs: IArticle[];
+  articles: IArticle[];
 }
 
 export interface IOpenCategories {
