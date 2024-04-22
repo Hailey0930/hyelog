@@ -41,7 +41,7 @@ export const ArrowIcon = styled(Image)`
   height: 15px;
 `;
 
-export const BlogContainer = styled.div`
+export const ArticleContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px 15px;
@@ -51,18 +51,18 @@ export const BlogContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-export const BlogInfoContainer = styled.div`
+export const ArticleInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
 `;
 
-export const BlogTitle = styled.div`
+export const ArticleTitle = styled.div`
   font-size: var(--font-size-400);
 `;
 
-export const BlogDate = styled.div`
+export const ArticleDate = styled.div`
   font-size: var(--font-size-600);
   color: var(--white-color-700);
 

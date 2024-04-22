@@ -5,9 +5,9 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export async function GET(): Promise<NextResponse<IArticle[]> | undefined> {
   try {
-    const blogs = await articleRepository.findAllArticles();
+    const articles = await articleRepository.findAllArticles();
 
-    return NextResponse.json(blogs);
+    return NextResponse.json(articles);
   } catch (error) {
     console.log(error);
   }
