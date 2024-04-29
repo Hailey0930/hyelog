@@ -12,6 +12,9 @@ const findAllArticles = async (): Promise<IArticleWithCategory[]> => {
         },
       },
     },
+    orderBy: {
+      date: "desc",
+    },
   });
 };
 
