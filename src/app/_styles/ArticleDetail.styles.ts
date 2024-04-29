@@ -183,7 +183,7 @@ export const Contents = styled.div`
 export const ContentsHeaderContainer = styled.div<{ $isSidebarOpen: boolean }>`
   width: 20%;
   height: fit-content;
-  padding: 30px 10px;
+  padding: 10px;
   border-left: 2px solid var(--white-color-400);
   position: absolute;
   right: 0;
@@ -201,7 +201,7 @@ export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  gap: 15px;
+  gap: 5px;
 `;
 
 export const ContentsHeader = styled.div<{
@@ -209,12 +209,12 @@ export const ContentsHeader = styled.div<{
 }>`
   font-size: ${({ $level }) =>
     $level === 1
-      ? "var(--font-size-200)"
-      : $level === 2
       ? "var(--font-size-400)"
-      : $level === 3
+      : $level === 2
       ? "var(--font-size-500)"
-      : "var(--font-size-600)"};
+      : $level === 3
+      ? "var(--font-size-600)"
+      : "var(--font-size-700)"};
   padding-left: ${({ $level }) =>
     $level === 1
       ? "0"
