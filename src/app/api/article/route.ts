@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fileUpload } from "@/app/_utils/fileUpload";
 import { articleRepository } from "@/app/_repositories/articleRepository";
 import { categoryRepository } from "@/app/_repositories/categoryRepository";
+import { getNewCategoryId } from "@/app/_utils/getNewCategoryId";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -11,13 +12,7 @@ export async function POST(request: NextRequest) {
   const categoryId = formData.get("categoryId")?.toString() || "";
   const newCategory = formData.get("newCategory")?.toString() || "";
 
-  let finalCategoryId = categoryId;
-
-  if (newCategory) {
-    const category = await categoryRepository.createCategory(newCategory);
-
-    finalCategoryId = category.id;
-  }
+  const finalCategoryId = await getNewCategoryId(categoryId, newCategory);
 
   const thumbnail =
     formData.get("thumbnail") instanceof File

@@ -4,6 +4,8 @@ import { deleteEmptyCategory } from "@/app/_utils/deleteEmptyCategory";
 import { deleteFile } from "@/app/_utils/fileDelete";
 import { fileUpload } from "@/app/_utils/fileUpload";
 import { articleRepository } from "@/app/_repositories/articleRepository";
+import { categoryRepository } from "@/app/_repositories/categoryRepository";
+import { getNewCategoryId } from "@/app/_utils/getNewCategoryId";
 
 export async function GET(
   request: NextRequest,
@@ -53,8 +55,11 @@ export async function PUT(request: NextRequest, { params }: IArticleParams) {
 
     const title = formData.get("title")?.toString() || "";
     const contents = formData.get("contents")?.toString() || "";
-    const categoryId = formData.get("categoryId")?.toString() || "";
     const thumbnail = formData.get("thumbnail") as File;
+    const categoryId = formData.get("categoryId")?.toString() || "";
+    const newCategory = formData.get("newCategory")?.toString() || "";
+
+    const finalCategoryId = await getNewCategoryId(categoryId, newCategory);
 
     const currentArticle = await articleRepository.findOneArticle(articleId);
     const oldCategoryId = currentArticle?.categoryId;
@@ -65,12 +70,12 @@ export async function PUT(request: NextRequest, { params }: IArticleParams) {
       articleId,
       title,
       contents,
-      categoryId,
+      finalCategoryId,
       thumbnailUrl
     );
 
     // 카테고리 수정 후 이전 카테고리에 속한 블로그 글이 없는 경우 카테고리 삭제
-    if (oldCategoryId && categoryId !== oldCategoryId) {
+    if (oldCategoryId && finalCategoryId !== oldCategoryId) {
       await deleteEmptyCategory(oldCategoryId);
     }
 

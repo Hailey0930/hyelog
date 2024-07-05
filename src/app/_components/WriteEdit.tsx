@@ -37,8 +37,6 @@ export default function WriteEditComponent({ params }: IParams) {
     useApiLoadingControl<IWriteCategoryList[]>();
   const { isLoading: isWriteLoading, callApi: callWriteApi } =
     useApiLoadingControl<Response>();
-  const { isLoading: isCategoryWriteLoading, callApi: callCategoryWriteApi } =
-    useApiLoadingControl<Response>();
 
   useEffect(() => {
     if (params && params.articleId) {
@@ -202,10 +200,9 @@ export default function WriteEditComponent({ params }: IParams) {
 
   return (
     <S.Container>
-      {(isDetailLoading ||
-        isCategoryListLoading ||
-        isWriteLoading ||
-        isCategoryWriteLoading) && <Loading />}
+      {(isDetailLoading || isCategoryListLoading || isWriteLoading) && (
+        <Loading />
+      )}
       <S.Title
         placeholder="제목을 입력하세요"
         onChange={handleTitleChange}
