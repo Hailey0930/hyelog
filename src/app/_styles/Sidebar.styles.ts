@@ -49,12 +49,12 @@ export const ProfilePhoto = styled(Image)`
   border-radius: 50%;
 `;
 
-export const BlogTitle = styled.div`
+export const ArticleTitle = styled.div`
   font-size: var(--font-size-300);
   font-weight: 700;
 `;
 
-export const BlogSubTitle = styled.div`
+export const ArticleSubTitle = styled.div`
   font-size: var(--font-size-500);
   font-weight: 500;
 `;

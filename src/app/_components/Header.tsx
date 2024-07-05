@@ -20,7 +20,7 @@ export default function Header() {
   const params = useParams();
 
   useEffect(() => {
-    if (params?.blogId) {
+    if (params?.articleId) {
       setCurrentPath("/");
     } else setCurrentPath(pathname);
   }, [pathname, params]);

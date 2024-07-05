@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fileUpload } from "@/app/_utils/fileUpload";
-import { blogRepository } from "@/app/_repositories/blogRepository";
+import { articleRepository } from "@/app/_repositories/articleRepository";
 import { categoryRepository } from "@/app/_repositories/categoryRepository";
+import { getNewCategoryId } from "@/app/_utils/getNewCategoryId";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -11,13 +12,7 @@ export async function POST(request: NextRequest) {
   const categoryId = formData.get("categoryId")?.toString() || "";
   const newCategory = formData.get("newCategory")?.toString() || "";
 
-  let finalCategoryId = categoryId;
-
-  if (newCategory) {
-    const category = await categoryRepository.createCategory(newCategory);
-
-    finalCategoryId = category.id;
-  }
+  const finalCategoryId = await getNewCategoryId(categoryId, newCategory);
 
   const thumbnail =
     formData.get("thumbnail") instanceof File
@@ -26,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   const thumbnailUrl = await fileUpload(thumbnail);
 
-  const result = await blogRepository.createBlog(
+  const result = await articleRepository.createArticle(
     title,
     contents,
     finalCategoryId,
@@ -35,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     message: "작성 성공",
-    blogId: result.id,
+    articleId: result.id,
     status: 200,
   });
 }

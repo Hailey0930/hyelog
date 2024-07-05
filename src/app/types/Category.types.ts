@@ -1,9 +1,9 @@
-import { IBlog } from "./Blog.types";
+import { IArticle } from "./Article.types";
 
 export interface ICategoryList {
   id: string;
   name: string;
-  blogs: IBlog[];
+  articles: IArticle[];
 }
 
 export interface IOpenCategories {

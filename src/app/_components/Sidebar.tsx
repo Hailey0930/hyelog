@@ -49,8 +49,8 @@ export default function Sidebar() {
       </S.HamburgerContainer>
       <S.ProfileContainer>
         <S.ProfilePhoto src={profile} alt="프로필 사진" />
-        <S.BlogTitle>Hyerin&apos;s Blog</S.BlogTitle>
-        <S.BlogSubTitle>개발을 개발새발~</S.BlogSubTitle>
+        <S.ArticleTitle>Hyerin&apos;s Blog</S.ArticleTitle>
+        <S.ArticleSubTitle>개발을 개발새발~</S.ArticleSubTitle>
       </S.ProfileContainer>
       <S.LinkContainer>
         {linkArray.map((link) => (

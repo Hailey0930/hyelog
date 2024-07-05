@@ -33,7 +33,7 @@ export default function Category() {
     }));
   };
 
-  const handleMoveToBlog = (id: string) => {
+  const handleMoveToArticle = (id: string) => {
     router.push(`${id}`);
   };
 
@@ -54,19 +54,19 @@ export default function Category() {
           </S.CategoryContainer>
 
           {openCategories[category.id] && (
-            <S.BlogContainer>
-              {category.blogs.map((blog) => (
-                <S.BlogInfoContainer
-                  key={blog.id}
-                  onClick={() => handleMoveToBlog(blog.id)}
+            <S.ArticleContainer>
+              {category.articles.map((article) => (
+                <S.ArticleInfoContainer
+                  key={article.id}
+                  onClick={() => handleMoveToArticle(article.id)}
                 >
-                  <S.BlogTitle>{blog.title}</S.BlogTitle>
-                  <S.BlogDate>
-                    {dayjs(blog.date).format("YYYY.MM.DD")}
-                  </S.BlogDate>
-                </S.BlogInfoContainer>
+                  <S.ArticleTitle>{article.title}</S.ArticleTitle>
+                  <S.ArticleDate>
+                    {dayjs(article.date).format("YYYY.MM.DD")}
+                  </S.ArticleDate>
+                </S.ArticleInfoContainer>
               ))}
-            </S.BlogContainer>
+            </S.ArticleContainer>
           )}
         </S.CategoryListContainer>
       ))}

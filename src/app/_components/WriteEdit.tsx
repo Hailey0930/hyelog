@@ -5,7 +5,7 @@ import { IWriteCategoryList } from "../types/WriteEditor.types";
 import { useRouter } from "next/navigation";
 import { IParams } from "../types/params.types";
 import useApiLoadingControl from "../_utils/useApiLoadingControl";
-import { IBlog } from "../types/Blog.types";
+import { IArticle } from "../types/Article.types";
 import Loading from "./Loading";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
@@ -19,36 +19,34 @@ export default function WriteEditComponent({ params }: IParams) {
   // NOTE selectedCategory가 custom이면서 newCategory 값이 있으면 카테고리 등록 api도 태우기
   const [selectedCategory, setSelectedCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [blogDetail, setBlogDetail] = useState<IBlog>();
-  const [blogTitle, setBlogTitle] = useState("");
-  const [blogThumbnail, setBlogThumbnail] = useState<File | null>(null);
-  const [blogContents, setBlogContents] = useState("");
-  const [blogImages, setBlogImages] = useState<{ id: string; url: string }[]>(
-    []
-  );
+  const [articleDetail, setArticleDetail] = useState<IArticle>();
+  const [articleTitle, setArticleTitle] = useState("");
+  const [articleThumbnail, setArticleThumbnail] = useState<File | null>(null);
+  const [articleContents, setArticleContents] = useState("");
+  const [articleImages, setArticleImages] = useState<
+    { id: string; url: string }[]
+  >([]);
 
   const quillRef = useRef<ReactQuill>(null);
 
   const router = useRouter();
 
   const { isLoading: isDetailLoading, callApi: callDetailApi } =
-    useApiLoadingControl<IBlog>();
+    useApiLoadingControl<IArticle>();
   const { isLoading: isCategoryListLoading, callApi: callCategoryListApi } =
     useApiLoadingControl<IWriteCategoryList[]>();
   const { isLoading: isWriteLoading, callApi: callWriteApi } =
     useApiLoadingControl<Response>();
-  const { isLoading: isCategoryWriteLoading, callApi: callCategoryWriteApi } =
-    useApiLoadingControl<Response>();
 
   useEffect(() => {
-    if (params && params.blogId) {
-      const fetchBlog = async () => {
-        const blog = await callDetailApi(api.getArticle, params.blogId);
-        setBlogTitle(blog.title);
-        setBlogContents(blog.contents);
-        setBlogDetail(blog);
+    if (params && params.articleId) {
+      const fetchArticle = async () => {
+        const article = await callDetailApi(api.getArticle, params.articleId);
+        setArticleTitle(article.title);
+        setArticleContents(article.contents);
+        setArticleDetail(article);
       };
-      fetchBlog();
+      fetchArticle();
     }
   }, [callDetailApi, params]);
 
@@ -68,9 +66,9 @@ export default function WriteEditComponent({ params }: IParams) {
 
       setCategoryList(categoryListWithNew);
 
-      if (params && params.blogId) {
+      if (params && params.articleId) {
         const existingCategory = categoryListWithNew.find(
-          (category) => category.id === blogDetail?.categoryId
+          (category) => category.id === articleDetail?.categoryId
         );
         if (existingCategory) {
           setSelectedCategory(existingCategory.id);
@@ -81,7 +79,7 @@ export default function WriteEditComponent({ params }: IParams) {
     };
 
     fetchAndSetCategoryList();
-  }, [callCategoryListApi, params, blogDetail]);
+  }, [callCategoryListApi, params, articleDetail]);
 
   const handleCategory = (
     e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -93,28 +91,28 @@ export default function WriteEditComponent({ params }: IParams) {
   };
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setBlogTitle(e.target.value);
+    setArticleTitle(e.target.value);
   };
 
   const handleContentsChange = (value: string) => {
-    setBlogContents(value);
+    setArticleContents(value);
 
     if (!quillRef.current) return;
 
     const editorHtml = quillRef.current?.getEditor().root.innerHTML;
 
     const imagesInEditor = exportContentsImageSources(editorHtml);
-    const updatedBlogImages = blogImages.filter((image) =>
+    const updatedArticleImages = articleImages.filter((image) =>
       imagesInEditor.includes(image.url)
     );
 
-    if (updatedBlogImages.length !== blogImages.length)
-      setBlogImages(updatedBlogImages);
+    if (updatedArticleImages.length !== articleImages.length)
+      setArticleImages(updatedArticleImages);
   };
 
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setBlogThumbnail(e.target.files[0]);
+      setArticleThumbnail(e.target.files[0]);
     }
   };
 
@@ -138,7 +136,7 @@ export default function WriteEditComponent({ params }: IParams) {
         if (range)
           editor?.insertEmbed(range?.index, "image", response.file.secure_url);
 
-        setBlogImages((prev) => [
+        setArticleImages((prev) => [
           ...prev,
           { id: response.file.public_id, url: response.file.secure_url },
         ]);
@@ -146,10 +144,10 @@ export default function WriteEditComponent({ params }: IParams) {
     };
   };
 
-  const handleWriteBlog = async () => {
+  const handleWriteArticle = async () => {
     const formData = new FormData();
-    formData.append("title", blogTitle);
-    formData.append("contents", blogContents);
+    formData.append("title", articleTitle);
+    formData.append("contents", articleContents);
 
     if (selectedCategory !== "custom") {
       formData.append("categoryId", selectedCategory);
@@ -157,17 +155,17 @@ export default function WriteEditComponent({ params }: IParams) {
       formData.append("newCategory", newCategory);
     }
 
-    if (blogThumbnail) formData.append("thumbnail", blogThumbnail);
+    if (articleThumbnail) formData.append("thumbnail", articleThumbnail);
 
-    const blogResponse = params?.blogId
-      ? await callWriteApi(() => api.editArticle(params.blogId, formData))
+    const articleResponse = params?.articleId
+      ? await callWriteApi(() => api.editArticle(params.articleId, formData))
       : await callWriteApi(() => api.writeArticle(formData));
 
-    if (blogResponse.ok) {
+    if (articleResponse.ok) {
       console.log("블로그 등록 성공");
 
-      const blogResult = await blogResponse.json();
-      router.push(`/${blogResult.blogId}`);
+      const articleResult = await articleResponse.json();
+      router.push(`/${articleResult.articleId}`);
     } else {
       console.log("블로그 등록 실패");
     }
@@ -202,14 +200,13 @@ export default function WriteEditComponent({ params }: IParams) {
 
   return (
     <S.Container>
-      {(isDetailLoading ||
-        isCategoryListLoading ||
-        isWriteLoading ||
-        isCategoryWriteLoading) && <Loading />}
+      {(isDetailLoading || isCategoryListLoading || isWriteLoading) && (
+        <Loading />
+      )}
       <S.Title
         placeholder="제목을 입력하세요"
         onChange={handleTitleChange}
-        value={blogTitle}
+        value={articleTitle}
       />
       <S.ThumbnailCategoryContainer>
         <S.ThumbnailContainer>
@@ -237,7 +234,7 @@ export default function WriteEditComponent({ params }: IParams) {
         <ReactQuill
           theme="snow"
           ref={quillRef}
-          value={blogContents}
+          value={articleContents}
           style={{ height: "95%" }}
           modules={modules}
           onChange={handleContentsChange}
@@ -246,8 +243,8 @@ export default function WriteEditComponent({ params }: IParams) {
 
       <S.BottomContainer>
         <S.TextButton>돌아가기</S.TextButton>
-        <S.TextButton onClick={handleWriteBlog}>
-          {params.blogId ? "수정하기" : "작성하기"}
+        <S.TextButton onClick={handleWriteArticle}>
+          {params.articleId ? "수정하기" : "작성하기"}
         </S.TextButton>
       </S.BottomContainer>
     </S.Container>
